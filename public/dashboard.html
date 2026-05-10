@@ -1,53 +1,150 @@
 <!DOCTYPE html>
-<html>
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TSUE Career</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        body {
-            font-family: Arial;
-            background: #f0f2f5;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(145deg, #f4f7fc 0%, #eef2f7 100%);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
         .navbar {
             background: #1E2A5E;
-            color: white;
-            padding: 15px 30px;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 20px;
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #D4AF37);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-        .welcome {
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 30px;
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2,1fr);
-            gap: 20px;
-        }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            text-align: center;
+
+        .icon-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: white;
             cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             transition: 0.2s;
         }
+
+        .icon-btn:hover {
+            background: #D4AF37;
+            color: #1E2A5E;
+        }
+
+        .logout-btn {
+            background: #e53e3e;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Container */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Welcome card */
+        .welcome-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid rgba(212,175,55,0.3);
+        }
+
+        .welcome-text h2 {
+            color: #1E2A5E;
+            font-size: 1.8rem;
+        }
+
+        .direction-badge {
+            background: #D4AF37;
+            color: #1E2A5E;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: bold;
+        }
+
+        /* Grid cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.05);
+            border: 1px solid #eef2f7;
+        }
+
         .card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15);
+            border-color: #D4AF37;
         }
-        .icon {
-            font-size: 40px;
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 0.8rem;
         }
+
+        .card h3 {
+            color: #1E2A5E;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -56,55 +153,127 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
+
         .modal-content {
             background: white;
-            width: 350px;
-            margin: 100px auto;
-            padding: 20px;
-            border-radius: 16px;
+            border-radius: 2rem;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 1.8rem;
+            position: relative;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
         }
+
         .close {
-            float: right;
+            position: absolute;
+            right: 1.5rem;
+            top: 1rem;
+            font-size: 1.8rem;
             cursor: pointer;
-            font-size: 24px;
+            color: #888;
+        }
+
+        /* Icon picker */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .icon-option {
+            font-size: 2.2rem;
+            background: #f0f2f5;
+            padding: 0.6rem;
+            text-align: center;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .icon-option:hover {
+            background: #D4AF37;
+            transform: scale(1.05);
+        }
+
+        /* Learning / tasks */
+        .task-item, .lesson-item {
+            background: #f8fafc;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 1rem;
+        }
+
+        .code-area {
+            background: #1e293b;
+            color: #e2e8f0;
+            font-family: monospace;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+        }
+
+        .chart-container {
+            max-height: 400px;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 700px) {
+            .dashboard-container { padding: 0 1rem; }
         }
     </style>
 </head>
 <body>
+
 <div class="navbar">
-    <div><b>TSUE PLATFORM</b></div>
-    <button onclick="logout()" style="background:#E58A2E; border:none; padding:5px 15px; border-radius:8px; cursor:pointer;">Chiqish</button>
-</div>
-<div class="container">
-    <div class="welcome">
-        <h2 id="welcomeMsg">Xush kelibsiz!</h2>
+    <div class="logo">📘 TSUE <span style="color:#D4AF37;">CAREER</span></div>
+    <div class="nav-controls">
+        <button class="icon-btn" id="openSettings">⚙️ Sozlamalar</button>
+        <button class="logout-btn" id="logoutBtn">🚪 Chiqish</button>
     </div>
-    <div class="grid">
-        <div class="card" onclick="selectDir()">
-            <div class="icon">🎯</div>
-            <h3>Yo'nalish tanlash</h3>
-            <p>3 ta yo'nalishdan birini tanlang</p>
+</div>
+
+<div class="dashboard-container">
+    <div class="welcome-card">
+        <div class="welcome-text">
+            <h2 id="welcomeMsg">Xush kelibsiz!</h2>
+            <p>O‘z yo‘nalishingni tanla va karerangni qur</p>
         </div>
-        <div class="card" onclick="showInfo()">
-            <div class="icon">📚</div>
-            <h3>Yo'nalish haqida</h3>
-            <p>Batafsil ma'lumot</p>
+        <div class="direction-badge" id="dirBadge">Yo‘nalish tanlanmagan</div>
+    </div>
+
+    <div class="cards-grid">
+        <div class="card" onclick="openModal('directionInfo')">
+            <div class="card-icon">📚</div>
+            <h3>Yo‘nalish haqida</h3>
+            <p>Prezentatsiya, texnologiyalar, resurslar</p>
         </div>
-        <div class="card" onclick="showRank()">
-            <div class="icon">🏆</div>
-            <h3>Reyting</h3>
-            <p>Eng yaxshi talabalar</p>
+        <div class="card" onclick="openModal('learning')">
+            <div class="card-icon">🎓</div>
+            <h3>Boshlang‘ich bilimlar</h3>
+            <p>SQLBolt, Python, Kali, Pandas uslubida</p>
         </div>
-        <div class="card" onclick="openGroup()">
-            <div class="icon">📱</div>
-            <h3>Telegram guruh</h3>
-            <p>Qo'shilish</p>
+        <div class="card" onclick="openModal('weeklyTasks')">
+            <div class="card-icon">📝</div>
+            <h3>Haftalik topshiriqlar</h3>
+            <p>15 ta topshiriq (test + kod yozish)</p>
+        </div>
+        <div class="card" onclick="openModal('ranking')">
+            <div class="card-icon">🏆</div>
+            <h3>Haftalik reyting</h3>
+            <p>Gistogramma va umumiy ball</p>
         </div>
     </div>
 </div>
 
-<div id="modal" class="modal">
+<div id="globalModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <div id="modalBody"></div>
@@ -114,47 +283,152 @@
 <script>
     const userId = localStorage.getItem('userId');
     if (!userId) window.location.href = '/';
-    document.getElementById('welcomeMsg').innerHTML = `Xush kelibsiz, foydalanuvchi!`;
 
-    function logout() {
-        localStorage.clear();
-        window.location.href = '/';
+    let currentUser = null;
+    let currentDirection = null;
+    let userTasks = JSON.parse(localStorage.getItem('userTasks') || '{}');
+
+    // ========== API calls ==========
+    async function fetchUser() {
+        try {
+            const res = await fetch(`/api/user/${userId}`);
+            const data = await res.json();
+            if (data.success) {
+                currentUser = data.user;
+                currentDirection = currentUser.direction;
+                localStorage.setItem('userName', `${currentUser.name} ${currentUser.surname}`);
+                document.getElementById('welcomeMsg').innerHTML = `Xush kelibsiz, ${currentUser.name} ${currentUser.surname}! 👋`;
+                document.getElementById('dirBadge').innerHTML = currentDirection ? currentDirection : 'Yo‘nalish tanlanmagan';
+                if (!currentDirection) openModal('selectDirection');
+            } else { logout(); }
+        } catch(e) { console.log(e); }
     }
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
+
+    async function updateProfile(icon, direction) {
+        const body = { userId: parseInt(userId) };
+        if (icon) body.icon = icon;
+        if (direction) body.direction = direction;
+        const res = await fetch('/api/update-profile', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+        const data = await res.json();
+        if (data.success) {
+            currentUser = data.user;
+            currentDirection = data.user.direction;
+            document.getElementById('dirBadge').innerHTML = currentDirection || 'Yo‘nalish tanlanmagan';
+            return true;
+        }
+        return false;
     }
-    function selectDir() {
-        document.getElementById('modalBody').innerHTML = `
-            <h3>Yo'nalish tanlang</h3>
-            <div onclick="saveDir('suniy intellekt')">🤖 Suniy intellekt</div>
-            <div onclick="saveDir('axborot xavfsizligi')">🔒 Axborot xavfsizligi</div>
-            <div onclick="saveDir('statistika')">📊 Statistika</div>
-        `;
-        document.getElementById('modal').style.display = 'block';
+
+    async function saveScore(taskId, score) {
+        const res = await fetch('/api/save-score', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ userId: parseInt(userId), taskId, score }) });
+        const data = await res.json();
+        if (data.success) {
+            userTasks[taskId] = score;
+            localStorage.setItem('userTasks', JSON.stringify(userTasks));
+        }
     }
-    function saveDir(d) {
-        localStorage.setItem('dir', d);
-        alert(d + " tanlandi");
+
+    // ========== Modal handlers ==========
+    function closeModal() { document.getElementById('globalModal').style.display = 'none'; }
+
+    async function openModal(type) {
+        const modalBody = document.getElementById('modalBody');
+        if (type === 'selectDirection') {
+            modalBody.innerHTML = `
+                <h2>🎯 Yo‘nalish tanlash</h2>
+                <p>Karyerangizni qurish uchun birini tanlang:</p>
+                <div class="icon-grid">
+                    <div class="icon-option" onclick="selectDirection('suniy intellekt')">🤖 Suniy intellekt</div>
+                    <div class="icon-option" onclick="selectDirection('axborot xavfsizligi')">🔒 Axborot xavfsizligi</div>
+                    <div class="icon-option" onclick="selectDirection('statistika')">📊 Statistika</div>
+                </div>
+            `;
+        } 
+        else if (type === 'directionInfo') {
+            if (!currentDirection) { alert("Avval yo‘nalish tanlang!"); openModal('selectDirection'); return; }
+            const infoMap = {
+                'suniy intellekt': `<h2>🤖 Suniy intellekt</h2><p>Sun’iy intellekt – kompyuterlarni inson kabi fikrlashga o‘rgatish. Asosiy texnologiyalar: Python, NumPy, Pandas, TensorFlow, PyTorch, scikit-learn.</p><p><strong>Resurslar:</strong> <a href='https://learnpython.org' target='_blank'>LearnPython</a>, <a href='https://tensorflow.org' target='_blank'>TensorFlow</a>, <a href='https://kaggle.com' target='_blank'>Kaggle</a></p><iframe width='100%' height='200' src='https://www.youtube.com/embed/aircAruvnKk' frameborder='0'></iframe>`,
+                'axborot xavfsizligi': `<h2>🔒 Axborot Xavfsizligi</h2><p>Maʼlumotlarni ruxsatsiz kirishdan himoya qilish. Asosiy sohalar: Kali Linux, kriptografiya, tarmoq xavfsizligi, penetration testing, CTF.</p><p><strong>Resurslar:</strong> <a href='https://kali.org' target='_blank'>Kali Linux</a>, <a href='https://tryhackme.com' target='_blank'>TryHackMe</a></p><iframe width='100%' height='200' src='https://www.youtube.com/embed/5rJ1hP2yHhU' frameborder='0'></iframe>`,
+                'statistika': `<h2>📊 Statistika</h2><p>Maʼlumotlarni to‘plash, tahlil qilish va xulosa chiqarish. Python, Pandas, Matplotlib, Seaborn, SciPy asosiy vositalar.</p><p><strong>Resurslar:</strong> <a href='https://scipy.org' target='_blank'>SciPy</a>, <a href='https://kaggle.com' target='_blank'>Kaggle</a></p><iframe width='100%' height='200' src='https://www.youtube.com/embed/zOUJdP2jvNg' frameborder='0'></iframe>`
+            };
+            modalBody.innerHTML = infoMap[currentDirection];
+        }
+        else if (type === 'learning') {
+            if (!currentDirection) { alert("Avval yo‘nalish tanlang!"); openModal('selectDirection'); return; }
+            const resources = {
+                'suniy intellekt': [`<div class='task-item'><b>🐍 Python asoslari</b> <a href='https://learnpython.org' target='_blank'>O‘rganish →</a><br><textarea rows='2' placeholder='Kodingizni yozing' id='code_py' style='width:100%'></textarea><button onclick=\"checkCode('python', 'print')\">✅ Tekshirish</button></div>`, `<div class='task-item'><b>📊 NumPy</b> <a href='https://numpy.org/learn' target='_blank'>Dars</a></div>`, `<div class='task-item'><b>🧠 TensorFlow</b> <a href='https://tensorflow.org' target='_blank'>Dars</a></div>`],
+                'axborot xavfsizligi': [`<div class='task-item'><b>💻 Kali Linux asoslari</b> <a href='https://kali.org' target='_blank'>O‘rganish</a></div>`, `<div class='task-item'><b>🔐 Kriptografiya</b> <a href='https://cryptography.io' target='_blank'>O‘rganish</a></div>`],
+                'statistika': [`<div class='task-item'><b>📈 Pandas</b> <a href='https://pandas.pydata.org' target='_blank'>O‘rganish</a></div>`, `<div class='task-item'><b>📉 Matplotlib</b> <a href='https://matplotlib.org' target='_blank'>O‘rganish</a></div>`]
+            };
+            modalBody.innerHTML = `<h2>🎓 Boshlang‘ich bilimlar – ${currentDirection}</h2>${resources[currentDirection].join('')}`;
+        }
+        else if (type === 'weeklyTasks') {
+            if (!currentDirection) { alert("Avval yo‘nalish tanlang!"); openModal('selectDirection'); return; }
+            modalBody.innerHTML = `<h2>📋 Haftalik topshiriqlar (${currentDirection})</h2><div id='tasksList'>Yuklanmoqda...</div>`;
+            const res = await fetch(`/api/tasks/${currentDirection}`);
+            const tasks = await res.json();
+            if (!tasks.length) { document.getElementById('tasksList').innerHTML = '<p>Hozircha topshiriqlar mavjud emas</p>'; return; }
+            let html = '';
+            for (let t of tasks) {
+                const saved = userTasks[t.id] || 0;
+                if (t.type === 'test') {
+                    html += `<div class='task-item'><b>${t.title}</b><br>${t.question}<br>${t.options.map(opt => `<label><input type='radio' name='${t.id}' value='${opt}'> ${opt}</label>`).join(' ')}<br><button onclick='submitTest("${t.id}", "${t.answer}", ${t.points})'>✅ Javob</button> <span>Ball: ${saved}/${t.points}</span></div>`;
+                } else {
+                    html += `<div class='task-item'><b>${t.title}</b><br>${t.question}<br><textarea id='code_${t.id}' rows='4' style='width:100%' placeholder='Kodingizni yozing'></textarea><br><button onclick='submitCode("${t.id}", "${t.solution.replace(/"/g, '&quot;')}", ${t.points})'>💻 Tekshirish</button> <span>Ball: ${saved}/${t.points}</span></div>`;
+                }
+            }
+            document.getElementById('tasksList').innerHTML = html;
+        }
+        else if (type === 'ranking') {
+            const res = await fetch('/api/ranking');
+            const ranking = await res.json();
+            modalBody.innerHTML = `<h2>🏆 Umumiy reyting</h2><canvas id='rankChart' style='max-height:400px'></canvas><ul>${ranking.map((r,i) => `<li>${i+1}. ${r.icon} ${r.name} — ${r.total} ball</li>`).join('')}</ul>`;
+            setTimeout(() => {
+                const ctx = document.getElementById('rankChart').getContext('2d');
+                new Chart(ctx, { type: 'bar', data: { labels: ranking.map(r => r.name), datasets: [{ label: 'Ball', data: ranking.map(r => r.total), backgroundColor: '#D4AF37' }] } });
+            }, 100);
+        }
+        else if (type === 'settings') {
+            modalBody.innerHTML = `
+                <h2>⚙️ Sozlamalar</h2>
+                <div class='icon-grid'>${['😊','🤖','👨‍💻','🦁','🐱','🐻','🐼','🐧','🦊','🐝','🐙','🦄'].map(ic => `<div class='icon-option' onclick='updateIcon("${ic}")'>${ic}</div>`).join('')}</div>
+                <hr><button onclick="window.open('https://t.me/+1WNbg57C2FQwZjAy','_blank')" class='icon-btn'>📱 Telegram guruh</button><br><br>
+                <button onclick="logout()" class='logout-btn'>🚪 Saytdan chiqish</button>
+            `;
+        }
+        document.getElementById('globalModal').style.display = 'flex';
+    }
+
+    window.selectDirection = async (dir) => {
+        await updateProfile(null, dir);
         closeModal();
-    }
-    function showInfo() {
-        const d = localStorage.getItem('dir');
-        if (!d) { alert('Avval yo\'nalish tanlang'); return; }
-        const info = {
-            'suniy intellekt': 'Suniy intellekt – kompyuterlarni fikrlashga o\'rgatish. Python, ML.',
-            'axborot xavfsizligi': 'Axborot xavfsizligi – ma\'lumotlarni himoya qilish.',
-            'statistika': 'Statistika – ma\'lumotlarni tahlil qilish.'
-        };
-        document.getElementById('modalBody').innerHTML = `<h3>${d}</h3><p>${info[d]}</p>`;
-        document.getElementById('modal').style.display = 'block';
-    }
-    function showRank() {
-        document.getElementById('modalBody').innerHTML = `<h3>🏆 Reyting</h3><p>Hozircha ma'lumot yo'q</p>`;
-        document.getElementById('modal').style.display = 'block';
-    }
-    function openGroup() {
-        window.open('https://t.me/+1WNbg57C2FQwZjAy', '_blank');
-    }
+        alert(`✅ ${dir} yo‘nalishi tanlandi!`);
+        fetchUser();
+    };
+    window.updateIcon = async (ic) => { await updateProfile(ic, null); closeModal(); alert("Icon yangilandi"); fetchUser(); };
+    window.submitTest = async (taskId, correct, points) => {
+        const selected = document.querySelector(`input[name="${taskId}"]:checked`);
+        if (!selected) { alert("Javob tanlang!"); return; }
+        const isCorrect = selected.value === correct;
+        const earned = isCorrect ? points : 0;
+        await saveScore(taskId, earned);
+        alert(isCorrect ? `✅ To‘g‘ri! +${points} ball` : `❌ Xato. To‘g‘ri javob: ${correct}`);
+        openModal('weeklyTasks');
+    };
+    window.submitCode = async (taskId, solution, points) => {
+        const userCode = document.getElementById(`code_${taskId}`).value;
+        if (userCode.trim() === solution.trim()) { await saveScore(taskId, points); alert(`✅ To‘g‘ri! +${points} ball`); }
+        else { await saveScore(taskId, 0); alert(`❌ Xato. To‘g‘ri kod:\n${solution}`); }
+        openModal('weeklyTasks');
+    };
+    window.checkCode = (lang, keyword) => { alert("Test rejimi. To‘liq tekshirish backendda."); };
+
+    document.getElementById('logoutBtn').onclick = () => logout();
+    document.getElementById('openSettings').onclick = () => openModal('settings');
+
+    function logout() { localStorage.clear(); window.location.href = '/'; }
+
+    fetchUser();
 </script>
 </body>
 </html>
