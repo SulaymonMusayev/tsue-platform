@@ -24,14 +24,18 @@
         .card-icon { font-size: 3rem; margin-bottom: 0.8rem; }
         .card h3 { color: #1E2A5E; margin-bottom: 0.5rem; }
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; border-radius: 2rem; width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto; padding: 1.8rem; position: relative; box-shadow: 0 20px 35px rgba(0,0,0,0.3); }
+        .modal-content { background: white; border-radius: 2rem; width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; padding: 1.8rem; position: relative; box-shadow: 0 20px 35px rgba(0,0,0,0.3); }
         .close { position: absolute; right: 1.5rem; top: 1rem; font-size: 1.8rem; cursor: pointer; color: #888; }
         .icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.8rem; margin: 1rem 0; }
         .icon-option { font-size: 2.2rem; background: #f0f2f5; padding: 0.6rem; text-align: center; border-radius: 1rem; cursor: pointer; transition: 0.1s; }
         .icon-option:hover { background: #D4AF37; transform: scale(1.05); }
-        .task-item, .lesson-item { background: #f8fafc; margin: 1rem 0; padding: 1rem; border-radius: 1rem; }
-        .code-area { background: #1e293b; color: #e2e8f0; font-family: monospace; padding: 1rem; border-radius: 1rem; margin: 1rem 0; }
-        .chart-container { max-height: 400px; margin: 1rem 0; }
+        .task-item { background: #f8fafc; margin: 1rem 0; padding: 1rem; border-radius: 1rem; }
+        .lesson-card { background: white; margin-bottom: 25px; border-radius: 20px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eef2f7; }
+        .code-block { background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 8px; font-family: monospace; margin: 10px 0; }
+        textarea { width: 100%; padding: 12px; font-family: monospace; border-radius: 8px; border: 1px solid #ccc; margin: 10px 0; }
+        .check-btn { background: #D4AF37; border: none; padding: 8px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .check-btn:hover { background: #1E2A5E; color: white; }
+        .completed { background: #e0ffe0 !important; }
         @media (max-width: 700px) { .dashboard-container { padding: 0 1rem; } }
     </style>
 </head>
@@ -63,7 +67,7 @@
         <div class="card" onclick="openModal('learning')">
             <div class="card-icon">🎓</div>
             <h3>Boshlang‘ich bilimlar</h3>
-            <p>5 ta interaktiv dars</p>
+            <p>Nazariya + video + misol + topshiriq</p>
         </div>
         <div class="card" onclick="openModal('weeklyTasks')">
             <div class="card-icon">📝</div>
@@ -137,24 +141,27 @@
         if (!codeArea) { alert("Kod maydoni topilmadi!"); return; }
         const userCode = codeArea.value.trim();
         if (!userCode) { alert("Iltimos, kod yozing!"); return; }
-        
-        const res = await fetch('/api/submit-code', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: parseInt(userId),
-                taskId: taskId,
-                userCode: userCode,
-                expectedKeyword: expectedKeyword,
-                points: points
-            })
-        });
-        const data = await res.json();
-        alert(data.message);
-        if (data.success) {
-            userTasks[taskId] = points;
-            localStorage.setItem('userTasks', JSON.stringify(userTasks));
-            openModal('weeklyTasks');
+
+        try {
+            const res = await fetch('/api/submit-code', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: parseInt(userId),
+                    taskId: taskId,
+                    userCode: userCode,
+                    expectedKeyword: expectedKeyword,
+                    points: points
+                })
+            });
+            const data = await res.json();
+            alert(data.message);
+            if (data.success) {
+                userTasks[taskId] = points;
+                localStorage.setItem('userTasks', JSON.stringify(userTasks));
+            }
+        } catch (err) {
+            alert("Serverda xatolik: " + err.message);
         }
     };
 
@@ -162,6 +169,8 @@
         const userCode = document.getElementById(`code_lesson_${idx}`).value.trim();
         const savedProgress = JSON.parse(localStorage.getItem('lessonProgress') || '{}');
         const key = `${direction}_${idx}`;
+        
+        if (!userCode) { alert("Iltimos, kod yozing!"); return; }
         
         if (userCode.toLowerCase().includes(correctAnswer.toLowerCase())) {
             if (!savedProgress[key]) {
@@ -172,9 +181,9 @@
             } else {
                 alert(`✅ Siz bu darsni allaqachon bajargan edingiz (+${points} ball).`);
             }
-            document.getElementById(`lesson_${idx}`).style.background = "#e0ffe0";
+            document.getElementById(`lesson_${idx}`).classList.add('completed');
         } else {
-            alert(`❌ Xato. To‘g‘ri javob: ${correctAnswer}`);
+            alert(`❌ Xato. To‘g‘ri javobda quyidagi so‘z bo‘lishi kerak: "${correctAnswer}"`);
         }
     };
 
@@ -208,34 +217,50 @@
         }
         else if (type === 'learning') {
             if (!currentDirection) { alert("Avval yo‘nalish tanlang!"); openModal('selectDirection'); return; }
+            
             const lessons = {
                 'suniy intellekt': [
-                    { title: "1. Python asoslari", theory: "Python – bu yuqori darajali dasturlash tili.", task: "print('Hello World')", check: "Hello World", points: 10 },
-                    { title: "2. Funksiyalar", theory: "def bilan funksiya yaratish.", task: "factorial funksiyasi", check: "return n * factorial(n-1)", points: 20 }
+                    { title: "1. Python asoslari", theory: "Python – bu yuqori darajali dasturlash tili. U sodda va o‘qishga qulay. O‘zgaruvchilar, ma'lumot turlari, shart operatorlari va sikllar mavjud.", video: "https://www.youtube.com/embed/4F2m91eKmts", task: "print('Hello World') kodini yozing", check: "print", points: 10, example: "print('Hello World')" },
+                    { title: "2. Funksiyalar", theory: "Funksiya – qayta ishlatiladigan kod bloki. def bilan yaratiladi.", video: "https://www.youtube.com/embed/9Os0o3wzS_I", task: "Faktorial hisoblaydigan funksiya yozing", check: "return n * factorial(n-1)", points: 20, example: "def factorial(n):\n    if n <= 1: return 1\n    return n * factorial(n-1)" },
+                    { title: "3. List va ma'lumot tuzilmalari", theory: "List – o‘zgaruvchan, tartibli kolleksiya.", video: "https://www.youtube.com/embed/W8KRzmVUuEI", task: "[1,2,3] listiga 4 ni qo‘shing", check: "append", points: 15, example: "my_list = [1,2,3]\nmy_list.append(4)" }
                 ],
                 'axborot xavfsizligi': [
-                    { title: "1. Kali Linux", theory: "Kali Linux hujum testlari uchun.", task: "nmap buyrug'i", check: "nmap", points: 10 },
-                    { title: "2. Kriptografiya", theory: "Caesar shifri.", task: "shift", check: "shift", points: 20 }
+                    { title: "1. Kali Linux asoslari", theory: "Kali Linux – penetration testing uchun distributiv.", video: "https://www.youtube.com/embed/3jYhWvqvsAk", task: "nmap buyrug'ini yozing", check: "nmap", points: 10, example: "nmap -sP 192.168.1.1/24" },
+                    { title: "2. Kriptografiya", theory: "Caesar shifri – harflarni surish.", video: "https://www.youtube.com/embed/6WYpCayVU8s", task: "Caesar shifri uchun kod", check: "chr(ord(c)+3)", points: 20, example: "def caesar(text):\n    return ''.join(chr(ord(c)+3) for c in text)" }
                 ],
                 'statistika': [
-                    { title: "1. Python Pandas", theory: "DataFrame tahlili.", task: "df.mean()", check: "mean", points: 10 },
-                    { title: "2. Matplotlib", theory: "Grafik chizish.", task: "plt.plot()", check: "plot", points: 20 }
+                    { title: "1. Python va Pandas", theory: "Pandas – ma'lumot tahlili.", video: "https://www.youtube.com/embed/vmEHCJofslg", task: "DataFrame yarating", check: "DataFrame", points: 10, example: "import pandas as pd\ndf = pd.DataFrame({'A':[1,2]})" },
+                    { title: "2. Matplotlib", theory: "Grafik chizish.", video: "https://www.youtube.com/embed/3Xc3CA656Y4", task: "Chiziqli grafik chizing", check: "plot", points: 20, example: "import matplotlib.pyplot as plt\nplt.plot([1,2,3])" }
                 ]
             };
+            
             let html = `<h2>📘 Boshlang‘ich bilimlar – ${currentDirection}</h2>`;
             const lessonArr = lessons[currentDirection] || [];
             const savedProgress = JSON.parse(localStorage.getItem('lessonProgress') || '{}');
+            
             lessonArr.forEach((l, idx) => {
                 const completed = savedProgress[`${currentDirection}_${idx}`] || false;
-                html += `<div class="task-item" id="lesson_${idx}" style="background:${completed ? '#e0ffe0' : '#f8fafc'}">
-                    <h3>${l.title} ${completed ? '✅' : '📖'}</h3>
-                    <p><strong>📖 Nazariya:</strong> ${l.theory}</p>
-                    <p><strong>💻 Vazifa:</strong> ${l.task}</p>
-                    <textarea id="code_lesson_${idx}" rows="3" style="width:100%" placeholder="Kodingizni yozing..."></textarea><br>
-                    <button onclick="checkLesson(${idx}, '${l.check}', ${l.points}, '${currentDirection}')">🔍 Tekshirish</button>
-                    <span>🎯 Ball: ${l.points}</span>
-                    ${completed ? '<span style="color:green"> Bajarilgan ✅</span>' : ''}
-                </div><hr>`;
+                html += `
+                    <div class="lesson-card" id="lesson_${idx}" style="${completed ? 'background:#e0ffe0' : 'background:white'}">
+                        <h3 style="color:#1E2A5E;">${l.title} ${completed ? '✅ Bajarilgan' : '📖'}</h3>
+                        <div style="background:#f0f4f8; padding:12px; border-radius:12px; margin:10px 0">
+                            <h4>📖 Nazariya</h4>
+                            <p>${l.theory}</p>
+                        </div>
+                        ${l.video ? `<div style="margin:10px 0"><iframe width="100%" height="200" src="${l.video}" frameborder="0"></iframe></div>` : ''}
+                        <div class="code-block">
+                            <strong>💡 Misol:</strong><br>
+                            <pre style="margin:5px 0; font-family:monospace;">${l.example}</pre>
+                        </div>
+                        <div>
+                            <p><strong>💻 Vazifa:</strong> ${l.task}</p>
+                            <textarea id="code_lesson_${idx}" rows="4" placeholder="Kodingizni yozing..."></textarea><br>
+                            <button class="check-btn" onclick="checkLesson(${idx}, '${l.check}', ${l.points}, '${currentDirection}')">🔍 Tekshirish</button>
+                            <span style="margin-left:10px">🎯 Ball: ${l.points}</span>
+                        </div>
+                    </div>
+                    <hr>
+                `;
             });
             modalBody.innerHTML = html;
         }
@@ -249,9 +274,9 @@
             for (let t of tasks) {
                 const saved = userTasks[t.id] || 0;
                 if (t.type === 'test') {
-                    html += `<div class='task-item'><b>${t.title}</b><br>${t.question}<br>${t.options.map(opt => `<label><input type='radio' name='${t.id}' value='${opt}'> ${opt}</label>`).join(' ')}<br><button onclick='submitTest("${t.id}", "${t.answer}", ${t.points})'>✅ Javob</button> <span>Ball: ${saved}/${t.points}</span></div>`;
+                    html += `<div class='task-item'><b>${t.title}</b><br>${t.question}<br>${t.options.map(opt => `<label><input type='radio' name='${t.id}' value='${opt}'> ${opt}</label>`).join(' ')}<br><button class='check-btn' onclick='submitTest("${t.id}", "${t.answer}", ${t.points})'>✅ Javob</button> <span>Ball: ${saved}/${t.points}</span></div>`;
                 } else {
-                    html += `<div class='task-item' id='task_${t.id}'><b>${t.title}</b><br>${t.question}<br><textarea id='code_${t.id}' rows='4' style='width:100%' placeholder='Kodingizni yozing'></textarea><br><button onclick='submitCode("${t.id}", "${t.solution}", ${t.points})'>💻 Tekshirish</button> <span>Ball: ${saved}/${t.points}</span></div>`;
+                    html += `<div class='task-item' id='task_${t.id}'><b>${t.title}</b><br>${t.question}<br><textarea id='code_${t.id}' rows='4' placeholder='Kodingizni yozing...'></textarea><br><button class='check-btn' onclick='submitCode("${t.id}", "${t.solution}", ${t.points})'>💻 Tekshirish</button> <span>Ball: ${saved}/${t.points}</span></div>`;
                 }
             }
             document.getElementById('tasksList').innerHTML = html;
