@@ -1,305 +1,1109 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | TSUE Career</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background: linear-gradient(145deg, #f4f7fc 0%, #eef2f7 100%); min-height: 100vh; }
-        .navbar { background: #1E2A5E; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, #fff, #D4AF37); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .nav-controls { display: flex; align-items: center; gap: 1rem; }
-        .icon-btn { background: rgba(255,255,255,0.15); border: none; padding: 8px 16px; border-radius: 40px; color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .icon-btn:hover { background: #D4AF37; color: #1E2A5E; }
-        .logout-btn { background: #e53e3e; border: none; padding: 8px 20px; border-radius: 40px; color: white; font-weight: bold; cursor: pointer; }
-        .dashboard-container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
-        .welcome-card { background: white; border-radius: 2rem; padding: 1.8rem 2rem; margin-bottom: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; border: 1px solid rgba(212,175,55,0.3); }
-        .welcome-text h2 { color: #1E2A5E; font-size: 1.8rem; }
-        .direction-badge { background: #D4AF37; color: #1E2A5E; padding: 0.4rem 1.2rem; border-radius: 40px; font-weight: bold; }
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem; margin-bottom: 2.5rem; }
-        .card { background: white; border-radius: 1.5rem; padding: 1.8rem; text-align: center; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 5px 12px rgba(0,0,0,0.05); border: 1px solid #eef2f7; }
-        .card:hover { transform: translateY(-6px); box-shadow: 0 20px 30px -12px rgba(0,0,0,0.15); border-color: #D4AF37; }
-        .card-icon { font-size: 3rem; margin-bottom: 0.8rem; }
-        .card h3 { color: #1E2A5E; margin-bottom: 0.5rem; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; border-radius: 2rem; width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; padding: 1.8rem; position: relative; box-shadow: 0 20px 35px rgba(0,0,0,0.3); }
-        .close { position: absolute; right: 1.5rem; top: 1rem; font-size: 1.8rem; cursor: pointer; color: #888; }
-        .icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.8rem; margin: 1rem 0; }
-        .icon-option { font-size: 2.2rem; background: #f0f2f5; padding: 0.6rem; text-align: center; border-radius: 1rem; cursor: pointer; transition: 0.1s; }
-        .icon-option:hover { background: #D4AF37; transform: scale(1.05); }
-        .task-item { background: #f8fafc; margin: 1rem 0; padding: 1rem; border-radius: 1rem; }
-        .lesson-card { background: white; margin-bottom: 25px; border-radius: 20px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eef2f7; }
-        .code-block { background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 8px; font-family: monospace; margin: 10px 0; }
-        textarea { width: 100%; padding: 12px; font-family: monospace; border-radius: 8px; border: 1px solid #ccc; margin: 10px 0; }
-        .check-btn { background: #D4AF37; border: none; padding: 8px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .check-btn:hover { background: #1E2A5E; color: white; }
-        .completed { background: #e0ffe0 !important; }
-        @media (max-width: 700px) { .dashboard-container { padding: 0 1rem; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSUE · Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#050810; --bg2:#080d1a; --card:#0d1525; --card2:#111a2e;
+  --border:rgba(0,200,255,0.12); --border2:rgba(0,200,255,0.25);
+  --neon:#00c8ff; --neon2:#7b2fff; --neon3:#00ff9d; --neon4:#ffb800;
+  --text:#e8eeff; --muted:#5a6a8a; --danger:#ff4d6d;
+  --sidebar:220px; --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;display:flex;overflow:hidden}
+
+/* ── GRID BG ── */
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.02) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 16px;z-index:100;position:relative;flex-shrink:0}
+.s-logo{display:flex;align-items:center;gap:10px;padding:0 8px;margin-bottom:32px}
+.s-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--neon),var(--neon2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 15px rgba(0,200,255,0.3);flex-shrink:0}
+.s-logo-text{font-size:13px;font-weight:800;line-height:1.1}
+.s-logo-sub{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;font-family:'Space Mono',monospace}
+
+.s-section-title{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:'Space Mono',monospace;padding:0 8px;margin-bottom:8px;margin-top:8px}
+
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;cursor:pointer;transition:all 0.2s;margin-bottom:2px;border:1px solid transparent;font-size:13px;font-weight:600;color:var(--muted);position:relative}
+.nav-item:hover{background:rgba(0,200,255,0.05);color:var(--text)}
+.nav-item.active{background:linear-gradient(135deg,rgba(0,200,255,0.12),rgba(123,47,255,0.08));color:var(--neon);border-color:rgba(0,200,255,0.2)}
+.nav-item .nav-icon{font-size:16px;width:20px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--neon2);color:#fff;font-size:9px;padding:2px 6px;border-radius:10px;font-family:'Space Mono',monospace}
+
+.sidebar-spacer{flex:1}
+
+.s-profile{padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all 0.2s;margin-bottom:8px}
+.s-profile:hover{border-color:var(--neon)}
+.s-avatar{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,rgba(0,200,255,0.2),rgba(123,47,255,0.2));border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.s-uname{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-dir{font-size:10px;color:var(--muted)}
+
+.s-btn{width:100%;padding:9px;border:1px solid var(--border);border-radius:9px;background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-size:12px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:8px;justify-content:center;font-weight:600}
+.s-btn:hover{border-color:var(--danger);color:var(--danger);background:rgba(255,77,109,0.05)}
+
+/* ── MAIN ── */
+.main{flex:1;height:100vh;overflow-y:auto;position:relative;z-index:1;scroll-behavior:smooth}
+.main::-webkit-scrollbar{width:4px}
+.main::-webkit-scrollbar-track{background:transparent}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+.page{display:none;padding:32px;max-width:1100px;margin:0 auto;animation:fadeUp 0.4s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.page-header{margin-bottom:28px}
+.page-title{font-size:26px;font-weight:800;margin-bottom:6px}
+.page-title span{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.page-sub{font-size:13px;color:var(--muted)}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color 0.3s}
+.card:hover{border-color:rgba(0,200,255,0.25)}
+.card-title{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.card-sub{font-size:12px;color:var(--muted)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+/* ── STAT CARDS ── */
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:16px}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.stat-val{font-size:24px;font-weight:800;font-family:'Space Mono',monospace}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ─── ONBOARDING OVERLAY ─── */
+#onboarding{position:fixed;inset:0;background:rgba(5,8,16,0.95);z-index:1000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.ob-card{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:48px;max-width:520px;width:90%;text-align:center;animation:slideUp 0.5s cubic-bezier(.16,1,.3,1);box-shadow:0 0 60px rgba(0,200,255,0.1)}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.ob-emoji{font-size:64px;margin-bottom:16px;display:block}
+.ob-title{font-size:28px;font-weight:800;margin-bottom:8px}
+.ob-title span{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ob-sub{font-size:13px;color:var(--muted);margin-bottom:32px;line-height:1.7}
+.ob-step{font-size:11px;color:var(--neon);font-family:'Space Mono',monospace;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px}
+
+/* direction grid */
+.dir-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:28px}
+.dir-option{padding:16px 20px;border:2px solid var(--border);border-radius:12px;cursor:pointer;transition:all 0.25s;display:flex;align-items:center;gap:16px;text-align:left}
+.dir-option:hover{border-color:var(--neon);background:rgba(0,200,255,0.05)}
+.dir-option.selected{border-color:var(--neon);background:rgba(0,200,255,0.08)}
+.dir-option .dir-em{font-size:32px}
+.dir-option .dir-info .dir-name{font-size:15px;font-weight:700}
+.dir-option .dir-info .dir-desc{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* icon grid */
+.icon-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:28px}
+.icon-opt{width:48px;height:48px;border-radius:10px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:all 0.2s}
+.icon-opt:hover{border-color:var(--neon);background:rgba(0,200,255,0.08)}
+.icon-opt.selected{border-color:var(--neon);background:rgba(0,200,255,0.12);box-shadow:0 0 12px rgba(0,200,255,0.2)}
+
+.ob-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--neon),var(--neon2));border:none;border-radius:10px;color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s}
+.ob-btn:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(0,200,255,0.3)}
+.ob-btn:disabled{opacity:0.4;pointer-events:none}
+
+/* ─── DIRECTION BANNER ─── */
+.dir-banner{background:linear-gradient(135deg,rgba(0,200,255,0.08),rgba(123,47,255,0.08));border:1px solid var(--border2);border-radius:var(--radius);padding:20px 24px;display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.dir-badge{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Space Mono',monospace;letter-spacing:1px}
+.dir-badge.ai{background:rgba(0,200,255,0.15);color:var(--neon);border:1px solid rgba(0,200,255,0.3)}
+.dir-badge.security{background:rgba(255,77,109,0.15);color:var(--danger);border:1px solid rgba(255,77,109,0.3)}
+.dir-badge.statistics{background:rgba(0,255,157,0.15);color:var(--neon3);border:1px solid rgba(0,255,157,0.3)}
+
+/* ─── RESOURCES ─── */
+.resource-list{display:flex;flex-direction:column;gap:10px}
+.resource-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text);transition:all 0.2s}
+.resource-item:hover{border-color:var(--neon);background:rgba(0,200,255,0.04);transform:translateX(4px)}
+.resource-item .r-icon{font-size:20px;width:28px;text-align:center}
+.resource-item .r-info .r-name{font-size:13px;font-weight:600}
+.resource-item .r-info .r-desc{font-size:11px;color:var(--muted)}
+.resource-item .r-arrow{margin-left:auto;color:var(--muted);font-size:16px;transition:transform 0.2s}
+.resource-item:hover .r-arrow{transform:translateX(4px);color:var(--neon)}
+
+/* ─── AI CHAT ─── */
+.chat-container{display:flex;flex-direction:column;height:420px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.chat-msgs{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.chat-msgs::-webkit-scrollbar{width:3px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border)}
+.chat-msg{max-width:80%;padding:12px 16px;border-radius:12px;font-size:13px;line-height:1.6;animation:msgIn 0.3s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.chat-msg.bot{background:rgba(0,200,255,0.06);border:1px solid rgba(0,200,255,0.15);align-self:flex-start;border-radius:4px 12px 12px 12px}
+.chat-msg.user{background:linear-gradient(135deg,rgba(0,200,255,0.12),rgba(123,47,255,0.12));border:1px solid rgba(0,200,255,0.2);align-self:flex-end;border-radius:12px 4px 12px 12px}
+.chat-msg.typing{color:var(--muted);font-style:italic}
+.chat-input-row{display:flex;gap:8px;padding:16px;border-top:1px solid var(--border);background:var(--bg2)}
+.chat-input{flex:1;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Syne',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s}
+.chat-input:focus{border-color:var(--neon)}
+.chat-send{padding:10px 20px;background:linear-gradient(135deg,var(--neon),var(--neon2));border:none;border-radius:10px;color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;flex-shrink:0}
+.chat-send:hover{box-shadow:0 4px 15px rgba(0,200,255,0.3)}
+
+/* ─── LEARN ─── */
+.level-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.level-tab{padding:7px 16px;border:1px solid var(--border);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--muted);font-family:'Syne',sans-serif}
+.level-tab:hover{border-color:var(--neon);color:var(--neon)}
+.level-tab.active{background:linear-gradient(135deg,rgba(0,200,255,0.15),rgba(123,47,255,0.1));color:var(--neon);border-color:rgba(0,200,255,0.3)}
+.level-badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:9px;font-family:'Space Mono',monospace;letter-spacing:1px;margin-left:6px;font-weight:700}
+.level-badge.basic{background:rgba(0,255,157,0.1);color:var(--neon3)}
+.level-badge.junior{background:rgba(0,200,255,0.1);color:var(--neon)}
+.level-badge.middle{background:rgba(123,47,255,0.15);color:#b47fff}
+
+.lesson-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;transition:border-color 0.2s}
+.lesson-card.active-lesson{border-color:rgba(0,200,255,0.3)}
+.lesson-header{padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background 0.2s}
+.lesson-header:hover{background:rgba(255,255,255,0.02)}
+.lesson-num{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,rgba(0,200,255,0.1),rgba(123,47,255,0.1));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:'Space Mono',monospace;flex-shrink:0}
+.lesson-title{font-size:14px;font-weight:700;flex:1}
+.lesson-chevron{color:var(--muted);transition:transform 0.3s;font-size:18px}
+.lesson-card.open .lesson-chevron{transform:rotate(180deg)}
+.lesson-body{display:none;padding:0 20px 20px}
+.lesson-card.open .lesson-body{display:block}
+
+.theory-box{background:rgba(0,200,255,0.03);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;font-size:13px;line-height:1.8;color:#c5d0e8}
+.theory-box pre{background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:8px;padding:12px;overflow-x:auto;font-family:'Space Mono',monospace;font-size:11px;color:var(--neon3);margin:8px 0;line-height:1.6}
+
+.code-editor-wrap{margin-bottom:14px}
+.code-editor-label{font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:6px;display:flex;align-items:center;justify-content:between;gap:8px}
+.code-editor{width:100%;min-height:140px;background:rgba(0,0,0,0.5);border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'Space Mono',monospace;font-size:12px;color:var(--neon3);resize:vertical;outline:none;line-height:1.6;transition:border-color 0.2s}
+.code-editor:focus{border-color:var(--neon)}
+
+.run-btn{padding:9px 20px;background:linear-gradient(135deg,var(--neon3),#00cc7a);border:none;border-radius:8px;color:#050810;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.run-btn:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(0,255,157,0.3)}
+.code-result{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:12px;font-family:'Space Mono',monospace}
+.code-result.success{background:rgba(0,255,157,0.06);border:1px solid rgba(0,255,157,0.2);color:var(--neon3)}
+.code-result.error{background:rgba(255,77,109,0.06);border:1px solid rgba(255,77,109,0.2);color:var(--danger)}
+
+/* ─── WEEKLY ─── */
+.week-progress{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap}
+.week-step{flex:1;min-width:80px;padding:10px;border:1px solid var(--border);border-radius:10px;text-align:center;font-size:11px;font-weight:600;color:var(--muted);transition:all 0.2s}
+.week-step.done{border-color:var(--neon3);color:var(--neon3);background:rgba(0,255,157,0.05)}
+.week-step.active-step{border-color:var(--neon);color:var(--neon);background:rgba(0,200,255,0.05)}
+.week-step .step-icon{font-size:18px;display:block;margin-bottom:4px}
+
+.test-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:12px}
+.test-q{font-size:15px;font-weight:700;margin-bottom:16px}
+.test-opts{display:flex;flex-direction:column;gap:8px}
+.test-opt{padding:11px 16px;border:1px solid var(--border);border-radius:9px;cursor:pointer;font-size:13px;transition:all 0.2s;background:rgba(255,255,255,0.02)}
+.test-opt:hover{border-color:var(--neon);background:rgba(0,200,255,0.05)}
+.test-opt.correct{border-color:var(--neon3);background:rgba(0,255,157,0.08);color:var(--neon3)}
+.test-opt.wrong{border-color:var(--danger);background:rgba(255,77,109,0.08);color:var(--danger)}
+.test-opt.selected{border-color:var(--neon);background:rgba(0,200,255,0.08)}
+
+.progress-bar-wrap{margin-bottom:16px}
+.progress-label{font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between}
+.progress-bar{height:6px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--neon),var(--neon2));border-radius:3px;transition:width 0.5s ease}
+
+.logic-input{width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;margin-bottom:10px}
+.logic-input:focus{border-color:var(--neon)}
+
+.check-btn{padding:9px 24px;background:linear-gradient(135deg,var(--neon),var(--neon2));border:none;border-radius:8px;color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s}
+.check-btn:hover{transform:translateY(-1px);box-shadow:0 4px 15px rgba(0,200,255,0.3)}
+
+.next-btn{padding:10px 28px;background:linear-gradient(135deg,var(--neon),var(--neon2));border:none;border-radius:9px;color:#fff;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:16px;width:100%}
+.next-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,200,255,0.25)}
+
+.score-summary{text-align:center;padding:32px;background:linear-gradient(135deg,rgba(0,200,255,0.06),rgba(123,47,255,0.06));border:1px solid var(--border2);border-radius:var(--radius)}
+.score-big{font-size:64px;font-weight:800;font-family:'Space Mono',monospace;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* ─── RANKING ─── */
+.rank-row{display:flex;align-items:center;gap:16px;padding:14px 20px;border-bottom:1px solid var(--border);transition:background 0.2s}
+.rank-row:last-child{border-bottom:none}
+.rank-row:hover{background:rgba(255,255,255,0.02)}
+.rank-pos{width:32px;font-size:14px;font-weight:800;font-family:'Space Mono',monospace;color:var(--muted);text-align:center;flex-shrink:0}
+.rank-pos.gold{color:#ffb800}
+.rank-pos.silver{color:#a0b0c8}
+.rank-pos.bronze{color:#cd7f32}
+.rank-avatar{width:38px;height:38px;border-radius:9px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.rank-name{flex:1;font-weight:700;font-size:14px}
+.rank-dir{font-size:11px;color:var(--muted)}
+.rank-score{font-size:18px;font-weight:800;font-family:'Space Mono',monospace;color:var(--neon)}
+
+.chart-bars{display:flex;gap:8px;align-items:flex-end;height:200px;padding:0 8px;margin-top:16px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bar-val{font-size:11px;font-weight:700;font-family:'Space Mono',monospace;color:var(--neon)}
+.bar{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--neon),var(--neon2));transition:height 1s cubic-bezier(.16,1,.3,1);min-height:4px}
+.bar-name{font-size:10px;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+
+/* ─── SETTINGS ─── */
+.settings-section{margin-bottom:24px}
+.settings-title{font-size:12px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-family:'Space Mono',monospace;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.icon-picker{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.icon-pick-btn{width:48px;height:48px;border-radius:10px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:all 0.2s;background:transparent}
+.icon-pick-btn:hover{border-color:var(--neon);background:rgba(0,200,255,0.08)}
+.icon-pick-btn.selected{border-color:var(--neon);background:rgba(0,200,255,0.12);box-shadow:0 0 12px rgba(0,200,255,0.2)}
+
+.tg-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 24px;background:rgba(0,136,204,0.1);border:1px solid rgba(0,136,204,0.3);border-radius:10px;color:#2aabee;text-decoration:none;font-weight:700;font-size:14px;transition:all 0.2s;cursor:pointer}
+.tg-btn:hover{background:rgba(0,136,204,0.15);transform:translateY(-1px)}
+
+.logout-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;background:rgba(255,77,109,0.08);border:1px solid rgba(255,77,109,0.25);border-radius:10px;color:var(--danger);font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:8px}
+.logout-btn:hover{background:rgba(255,77,109,0.15)}
+
+@media(max-width:768px){
+  .sidebar{display:none}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .page{padding:20px}
+}
+</style>
 </head>
 <body>
 
-<div class="navbar">
-    <div class="logo">📘 TSUE <span style="color:#D4AF37;">CAREER</span></div>
-    <div class="nav-controls">
-        <button class="icon-btn" id="openSettings">⚙️ Sozlamalar</button>
-        <button class="logout-btn" id="logoutBtn">🚪 Chiqish</button>
+<!-- ─── ONBOARDING ─── -->
+<div id="onboarding" style="display:none">
+  <div class="ob-card">
+    <!-- Step 1: Direction -->
+    <div id="ob-step1">
+      <span class="ob-emoji">🎓</span>
+      <div class="ob-step">01 / 02 — YO'NALISH</div>
+      <div class="ob-title">Xush kelibsiz, <span id="ob-name">Talaba</span>!</div>
+      <p class="ob-sub">Platformadan foydalanish uchun o'z yo'nalishingizni tanlang. Bu sizga mos topshiriqlar va materiallar beradi.</p>
+      <div class="dir-grid">
+        <div class="dir-option" onclick="selectDir('ai',this)">
+          <div class="dir-em">🤖</div>
+          <div class="dir-info">
+            <div class="dir-name">Sun'iy Intellekt</div>
+            <div class="dir-desc">Machine Learning · Python · Deep Learning</div>
+          </div>
+        </div>
+        <div class="dir-option" onclick="selectDir('security',this)">
+          <div class="dir-em">🔐</div>
+          <div class="dir-info">
+            <div class="dir-name">Axborot Xavfsizligi</div>
+            <div class="dir-desc">Cybersecurity · Cryptography · Ethical Hacking</div>
+          </div>
+        </div>
+        <div class="dir-option" onclick="selectDir('statistics',this)">
+          <div class="dir-em">📊</div>
+          <div class="dir-info">
+            <div class="dir-name">Statistika</div>
+            <div class="dir-desc">Data Analysis · Pandas · Statistical Methods</div>
+          </div>
+        </div>
+      </div>
+      <button class="ob-btn" id="ob-next1" onclick="showObStep2()" disabled>Keyingi →</button>
     </div>
+    <!-- Step 2: Icon -->
+    <div id="ob-step2" style="display:none">
+      <span class="ob-emoji" id="ob-preview-icon">😊</span>
+      <div class="ob-step">02 / 02 — PROFIL ICON</div>
+      <div class="ob-title">Ikoningizni <span>tanlang</span></div>
+      <p class="ob-sub">Profilingizda va reytingda ko'rinadigan belgini tanlang.</p>
+      <div class="icon-grid">
+        <div class="icon-opt selected" onclick="selectIcon('😊',this)">😊</div>
+        <div class="icon-opt" onclick="selectIcon('🦊',this)">🦊</div>
+        <div class="icon-opt" onclick="selectIcon('🐉',this)">🐉</div>
+        <div class="icon-opt" onclick="selectIcon('🦁',this)">🦁</div>
+        <div class="icon-opt" onclick="selectIcon('🐺',this)">🐺</div>
+        <div class="icon-opt" onclick="selectIcon('🦅',this)">🦅</div>
+        <div class="icon-opt" onclick="selectIcon('🤖',this)">🤖</div>
+        <div class="icon-opt" onclick="selectIcon('👾',this)">👾</div>
+        <div class="icon-opt" onclick="selectIcon('🧠',this)">🧠</div>
+        <div class="icon-opt" onclick="selectIcon('💎',this)">💎</div>
+        <div class="icon-opt" onclick="selectIcon('🔥',this)">🔥</div>
+        <div class="icon-opt" onclick="selectIcon('⚡',this)">⚡</div>
+      </div>
+      <button class="ob-btn" onclick="finishOnboarding()">Boshlash 🚀</button>
+    </div>
+  </div>
 </div>
 
-<div class="dashboard-container">
-    <div class="welcome-card">
-        <div class="welcome-text">
-            <h2 id="welcomeMsg">Xush kelibsiz!</h2>
-            <p>O‘z yo‘nalishingni tanla va karerangni qur</p>
-        </div>
-        <div class="direction-badge" id="dirBadge">Yo‘nalish tanlanmagan</div>
+<!-- ─── SIDEBAR ─── -->
+<aside class="sidebar">
+  <div class="s-logo">
+    <div class="s-logo-icon">🎓</div>
+    <div>
+      <div class="s-logo-text">TSUE</div>
+      <div class="s-logo-sub">Platform</div>
+    </div>
+  </div>
+  <div class="s-section-title">Asosiy</div>
+  <div class="nav-item active" onclick="showPage('home')"><span class="nav-icon">🏠</span> Bosh sahifa</div>
+  <div class="nav-item" onclick="showPage('learn')"><span class="nav-icon">📚</span> O'rganish</div>
+  <div class="nav-item" onclick="showPage('weekly')"><span class="nav-icon">📝</span> Haftalik <span class="nav-badge">20+</span></div>
+  <div class="nav-item" onclick="showPage('ranking')"><span class="nav-icon">🏆</span> Reyting</div>
+  <div class="sidebar-spacer"></div>
+  <div class="s-profile" onclick="showPage('settings')">
+    <div class="s-avatar" id="sidebarIcon">😊</div>
+    <div style="overflow:hidden">
+      <div class="s-uname" id="sidebarName">Talaba</div>
+      <div class="s-dir" id="sidebarDir">—</div>
+    </div>
+  </div>
+  <button class="s-btn" onclick="showPage('settings')">⚙️ Sozlamalar</button>
+</aside>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="page-header">
+      <div class="page-title">Salom, <span id="homeUsername">Talaba</span> 👋</div>
+      <div class="page-sub">Bugun ham yangi bilimlar o'rganamiz!</div>
+    </div>
+    <div class="dir-banner">
+      <span style="font-size:36px" id="homeDirIcon">🎓</span>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:15px" id="homeDirName">Yo'nalish tanlanmagan</div>
+        <div style="font-size:12px;color:var(--muted)" id="homeDirDesc">Yo'nalishingizni sozlamalardan o'zgartiring</div>
+      </div>
+      <div class="dir-badge ai" id="homeDirBadge">—</div>
+    </div>
+    <div class="grid3" style="margin-bottom:20px">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(0,200,255,0.1)">📚</div>
+        <div><div class="stat-val" id="statLessons">0</div><div class="stat-lbl">Darslar bajarildi</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(0,255,157,0.1)">⭐</div>
+        <div><div class="stat-val" id="statScore">0</div><div class="stat-lbl">Umumiy ball</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(123,47,255,0.1)">🏆</div>
+        <div><div class="stat-val" id="statRank">#—</div><div class="stat-lbl">Reyting o'rni</div></div>
+      </div>
     </div>
 
-    <div class="cards-grid">
-        <div class="card" onclick="openModal('directionInfo')">
-            <div class="card-icon">📚</div>
-            <h3>Yo‘nalish haqida</h3>
-            <p>Prezentatsiya, texnologiyalar, resurslar</p>
+    <!-- Direction info -->
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🎯 Yo'nalish haqida</div>
+        <div class="card-sub" style="margin-bottom:16px" id="dirAbout">Yo'nalish tanlanmagan</div>
+        <div id="dirVideo" style="border-radius:10px;overflow:hidden;background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)">
+          <div style="text-align:center;color:var(--muted)">
+            <div style="font-size:36px;margin-bottom:8px">▶️</div>
+            <div style="font-size:12px">Video yo'nalish tanlanganda ko'rinadi</div>
+          </div>
         </div>
-        <div class="card" onclick="openModal('learning')">
-            <div class="card-icon">🎓</div>
-            <h3>Boshlang‘ich bilimlar</h3>
-            <p>Nazariya + video + misol + topshiriq</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🔗 Foydali resurslar</div>
+        <div class="card-sub" style="margin-bottom:16px">Yo'nalishingiz bo'yicha eng yaxshi manbalar</div>
+        <div class="resource-list" id="dirResources">
+          <div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Yo'nalish tanlanmagan</div>
         </div>
-        <div class="card" onclick="openModal('weeklyTasks')">
-            <div class="card-icon">📝</div>
-            <h3>Haftalik topshiriqlar</h3>
-            <p>15 ta topshiriq (test + kod)</p>
-        </div>
-        <div class="card" onclick="openModal('ranking')">
-            <div class="card-icon">🏆</div>
-            <h3>Haftalik reyting</h3>
-            <p>Gistogramma va umumiy ball</p>
-        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<div id="globalModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <div id="modalBody"></div>
+  <!-- AI CHAT page inside home -->
+  <div class="page" id="page-chat">
+    <div class="page-header">
+      <div class="page-title">🤖 AI <span>Yordamchi</span></div>
+      <div class="page-sub">Yo'nalishingiz bo'yicha savollar bering</div>
     </div>
-</div>
+    <div class="chat-container">
+      <div class="chat-msgs" id="chatMsgs">
+        <div class="chat-msg bot">Salom! Men sizning yo'nalishingiz bo'yicha savollaringizga javob beraman. Nima o'rganmoqchisiz? 🎓</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Savolingizni yozing..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()">Yuborish ↗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEARN -->
+  <div class="page" id="page-learn">
+    <div class="page-header">
+      <div class="page-title">📚 <span>O'rganish</span></div>
+      <div class="page-sub">Nazariya va amaliy mashqlar</div>
+    </div>
+    <div class="level-tabs" id="levelTabs">
+      <button class="level-tab active" onclick="filterLevel('all',this)">Barchasi</button>
+      <button class="level-tab" onclick="filterLevel('basic',this)">Basic</button>
+      <button class="level-tab" onclick="filterLevel('junior',this)">Junior</button>
+      <button class="level-tab" onclick="filterLevel('middle',this)">Middle</button>
+    </div>
+    <div id="lessonsList">
+      <div style="text-align:center;padding:40px;color:var(--muted)">Yo'nalish tanlanmagan yoki yuklanmoqda...</div>
+    </div>
+  </div>
+
+  <!-- WEEKLY -->
+  <div class="page" id="page-weekly">
+    <div class="page-header">
+      <div class="page-title">📝 Haftalik <span>Topshiriqlar</span></div>
+      <div class="page-sub">Har hafta yangilanadi · Ball to'plang</div>
+    </div>
+    <div class="week-progress" id="weekProgress">
+      <div class="week-step active-step" id="step-test"><span class="step-icon">📝</span>Test (20)</div>
+      <div class="week-step" id="step-logic"><span class="step-icon">🧠</span>Mantiq (5)</div>
+      <div class="week-step" id="step-code"><span class="step-icon">💻</span>Kod (5)</div>
+      <div class="week-step" id="step-done"><span class="step-icon">🏆</span>Natija</div>
+    </div>
+    <div id="weeklyContent">
+      <div style="text-align:center;padding:40px;color:var(--muted)">Yuklanmoqda...</div>
+    </div>
+  </div>
+
+  <!-- RANKING -->
+  <div class="page" id="page-ranking">
+    <div class="page-header">
+      <div class="page-title">🏆 <span>Reyting</span></div>
+      <div class="page-sub">Haftalik topshiriqlar natijalari</div>
+    </div>
+    <div class="grid2" style="margin-bottom:20px">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px">📊 Gistogramma</div>
+        <div class="chart-bars" id="chartBars">
+          <div style="color:var(--muted);font-size:12px;margin:auto">Ma'lumot yuklanmoqda...</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px">🥇 Top o'rinlar</div>
+        <div id="rankingList">
+          <div style="text-align:center;padding:20px;color:var(--muted)">Yuklanmoqda...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="page-settings">
+    <div class="page-header">
+      <div class="page-title">⚙️ <span>Sozlamalar</span></div>
+      <div class="page-sub">Profilingizni boshqaring</div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="settings-section">
+          <div class="settings-title">Profil ikonasi</div>
+          <div class="icon-picker" id="settingsIconPicker">
+            <div class="icon-pick-btn selected" onclick="changeIcon('😊',this)">😊</div>
+            <div class="icon-pick-btn" onclick="changeIcon('🦊',this)">🦊</div>
+            <div class="icon-pick-btn" onclick="changeIcon('🐉',this)">🐉</div>
+            <div class="icon-pick-btn" onclick="changeIcon('🦁',this)">🦁</div>
+            <div class="icon-pick-btn" onclick="changeIcon('🐺',this)">🐺</div>
+            <div class="icon-pick-btn" onclick="changeIcon('🦅',this)">🦅</div>
+            <div class="icon-pick-btn" onclick="changeIcon('🤖',this)">🤖</div>
+            <div class="icon-pick-btn" onclick="changeIcon('👾',this)">👾</div>
+            <div class="icon-pick-btn" onclick="changeIcon('🧠',this)">🧠</div>
+            <div class="icon-pick-btn" onclick="changeIcon('💎',this)">💎</div>
+            <div class="icon-pick-btn" onclick="changeIcon('🔥',this)">🔥</div>
+            <div class="icon-pick-btn" onclick="changeIcon('⚡',this)">⚡</div>
+          </div>
+          <div id="iconSaveMsg" style="font-size:12px;color:var(--neon3);display:none">✅ Saqlandi!</div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-title">Yo'nalishni o'zgartirish</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="dir-option" onclick="changeDirection('ai',this)" style="padding:12px 14px">
+              <div class="dir-em" style="font-size:22px">🤖</div>
+              <div class="dir-info"><div class="dir-name" style="font-size:13px">Sun'iy Intellekt</div></div>
+            </div>
+            <div class="dir-option" onclick="changeDirection('security',this)" style="padding:12px 14px">
+              <div class="dir-em" style="font-size:22px">🔐</div>
+              <div class="dir-info"><div class="dir-name" style="font-size:13px">Axborot Xavfsizligi</div></div>
+            </div>
+            <div class="dir-option" onclick="changeDirection('statistics',this)" style="padding:12px 14px">
+              <div class="dir-em" style="font-size:22px">📊</div>
+              <div class="dir-info"><div class="dir-name" style="font-size:13px">Statistika</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="settings-section">
+          <div class="settings-title">Jamoa</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.7">Guruh a'zolari bilan muloqot qiling, savol bering, bilimlaringizni ulashing.</p>
+          <a href="https://t.me/+1WNbg57C2FQwZjAy" target="_blank" class="tg-btn">
+            ✈️ Telegram guruhga qo'shilish
+          </a>
+        </div>
+        <div class="settings-section" style="margin-top:24px">
+          <div class="settings-title">Hisobdan chiqish</div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Hisobingizdan chiqib, bosh sahifaga o'tasiz.</p>
+          <button class="logout-btn" onclick="logout()">🚪 Chiqish</button>
+        </div>
+        <div class="settings-section" style="margin-top:24px">
+          <div class="settings-title">Hisob ma'lumotlari</div>
+          <div style="font-size:13px;color:var(--muted);line-height:2">
+            <div>👤 Ism: <span id="settingName" style="color:var(--text)">—</span></div>
+            <div>🎓 Yo'nalish: <span id="settingDir" style="color:var(--text)">—</span></div>
+            <div>🆔 ID: <span id="settingId" style="color:var(--text);font-family:'Space Mono',monospace">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
 
 <script>
-    const userId = localStorage.getItem('userId');
-    if (!userId) window.location.href = '/';
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let state = {
+  userId: localStorage.getItem('userId'),
+  userName: localStorage.getItem('userName') || 'Talaba',
+  userIcon: localStorage.getItem('userIcon') || '😊',
+  userDirection: localStorage.getItem('userDirection') || '',
+  userScores: JSON.parse(localStorage.getItem('userScores') || '{}'),
+  tasks: null,
+  selectedDir: '',
+  selectedIcon: '😊',
+  weeklyPhase: 'test', // test | logic | code | done
+  testIdx: 0, testScore: 0,
+  logicIdx: 0, logicScore: 0,
+  codeIdx: 0, codeScore: 0,
+  currentLesson: null,
+  currentLevel: 'all'
+};
 
-    let currentUser = null;
-    let currentDirection = null;
-    let userTasks = JSON.parse(localStorage.getItem('userTasks') || '{}');
+const DIR_INFO = {
+  ai: {
+    name: "Sun'iy Intellekt", icon: '🤖', badge: 'AI · ML',
+    color: 'ai',
+    about: "Machine Learning, Neural Networks, Python va Data Science asoslarini o'rganing. PyTorch, TensorFlow, Scikit-learn kabi kutubxonalar bilan ishlang.",
+    video: 'https://www.youtube.com/embed/JMUxmLyrhSk',
+    resources: [
+      { icon: '🐍', name: 'Python.org', desc: 'Python rasmiy sayti', url: 'https://python.org' },
+      { icon: '🤗', name: 'Hugging Face', desc: 'ML modellar', url: 'https://huggingface.co' },
+      { icon: '📊', name: 'Kaggle', desc: 'ML musobaqalar va datasetlar', url: 'https://kaggle.com' },
+      { icon: '📚', name: 'fast.ai', desc: 'Bepul Deep Learning kursi', url: 'https://fast.ai' },
+      { icon: '🔬', name: 'Papers with Code', desc: 'Eng yangi AI tadqiqotlar', url: 'https://paperswithcode.com' }
+    ]
+  },
+  security: {
+    name: "Axborot Xavfsizligi", icon: '🔐', badge: 'SEC · HACK',
+    color: 'security',
+    about: "Kiberjawfsizlik, kriptografiya, tarmoq xavfsizligi va etik hacking bo'yicha chuqur bilimlar oling. CTF musobaqalarda qatnashing.",
+    video: 'https://www.youtube.com/embed/hXSFdwIOfnE',
+    resources: [
+      { icon: '🎯', name: 'TryHackMe', desc: 'Interaktiv cybersecurity', url: 'https://tryhackme.com' },
+      { icon: '💻', name: 'HackTheBox', desc: 'Pentest mashqlar', url: 'https://hackthebox.com' },
+      { icon: '📖', name: 'OWASP', desc: 'Web xavfsizlik standartlari', url: 'https://owasp.org' },
+      { icon: '🔓', name: 'PortSwigger', desc: 'Web Security Academy', url: 'https://portswigger.net/web-security' },
+      { icon: '🛡️', name: 'CyberDefenders', desc: 'Blue team mashqlar', url: 'https://cyberdefenders.org' }
+    ]
+  },
+  statistics: {
+    name: "Statistika", icon: '📊', badge: 'STAT · DATA',
+    color: 'statistics',
+    about: "Statistik tahlil, ehtimoliyat nazariyasi, Pandas, NumPy, Matplotlib va Seaborn kutubxonalari bilan professional darajada ishlashni o'rganing.",
+    video: 'https://www.youtube.com/embed/xxpc-HPKN28',
+    resources: [
+      { icon: '🐼', name: 'Pandas Docs', desc: 'Pandas rasmiy hujjatlar', url: 'https://pandas.pydata.org' },
+      { icon: '📈', name: 'Matplotlib', desc: 'Python vizualizatsiya', url: 'https://matplotlib.org' },
+      { icon: '🔢', name: 'Khan Academy', desc: 'Statistika kursi', url: 'https://khanacademy.org/math/statistics-probability' },
+      { icon: '📊', name: 'Seaborn', desc: 'Statistik vizualizatsiya', url: 'https://seaborn.pydata.org' },
+      { icon: '🧮', name: 'Scipy', desc: 'Ilmiy hisoblashlar', url: 'https://scipy.org' }
+    ]
+  }
+};
 
-    async function fetchUser() {
-        try {
-            const res = await fetch(`/api/user/${userId}`);
-            const data = await res.json();
-            if (data.success) {
-                currentUser = data.user;
-                currentDirection = currentUser.direction;
-                localStorage.setItem('userName', `${currentUser.name} ${currentUser.surname}`);
-                document.getElementById('welcomeMsg').innerHTML = `Xush kelibsiz, ${currentUser.name} ${currentUser.surname}! 👋`;
-                document.getElementById('dirBadge').innerHTML = currentDirection ? currentDirection : 'Yo‘nalish tanlanmagan';
-                if (!currentDirection) openModal('selectDirection');
-            } else { logout(); }
-        } catch(e) { console.log(e); }
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+window.onload = async () => {
+  if (!state.userId) { window.location.href = '/'; return; }
+
+  // Check new user onboarding
+  if (localStorage.getItem('isNewUser') === 'true') {
+    document.getElementById('ob-name').textContent = state.userName.split(' ')[0];
+    document.getElementById('onboarding').style.display = 'flex';
+    return;
+  }
+  initDashboard();
+};
+
+function initDashboard() {
+  updateSidebar();
+  updateHomeStats();
+  if (state.userDirection) {
+    loadTasks(state.userDirection);
+    updateDirectionUI(state.userDirection);
+  }
+  loadRanking();
+}
+
+function updateSidebar() {
+  document.getElementById('sidebarIcon').textContent = state.userIcon;
+  document.getElementById('sidebarName').textContent = state.userName;
+  const dir = DIR_INFO[state.userDirection];
+  document.getElementById('sidebarDir').textContent = dir ? dir.name : 'Yo\'nalish tanlanmagan';
+  document.getElementById('homeUsername').textContent = state.userName.split(' ')[0];
+  document.getElementById('settingName').textContent = state.userName;
+  document.getElementById('settingDir').textContent = dir ? dir.name : '—';
+  document.getElementById('settingId').textContent = state.userId;
+  // mark current dir in settings
+  document.querySelectorAll('#page-settings .dir-option').forEach(el => {
+    const d = el.getAttribute('onclick').match(/'(\w+)'/)?.[1];
+    el.classList.toggle('selected', d === state.userDirection);
+  });
+  // mark current icon in settings
+  document.querySelectorAll('.icon-pick-btn').forEach(el => {
+    el.classList.toggle('selected', el.textContent === state.userIcon);
+  });
+}
+
+function updateHomeStats() {
+  const scores = state.userScores;
+  const total = Object.values(scores).reduce((a,b)=>a+(b||0),0);
+  document.getElementById('statScore').textContent = total;
+  const done = Object.keys(scores).filter(k=>k.startsWith('lesson_')).length;
+  document.getElementById('statLessons').textContent = done;
+}
+
+function updateDirectionUI(dir) {
+  const info = DIR_INFO[dir];
+  if (!info) return;
+  document.getElementById('homeDirIcon').textContent = info.icon;
+  document.getElementById('homeDirName').textContent = info.name;
+  document.getElementById('homeDirDesc').textContent = info.about.substring(0,80)+'...';
+  const badge = document.getElementById('homeDirBadge');
+  badge.textContent = info.badge;
+  badge.className = `dir-badge ${info.color}`;
+  document.getElementById('dirAbout').textContent = info.about;
+  // video
+  document.getElementById('dirVideo').innerHTML = `<iframe width="100%" height="100%" src="${info.video}" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="border-radius:10px"></iframe>`;
+  // resources
+  const resList = DIR_INFO[dir].resources.map(r=>`
+    <a href="${r.url}" target="_blank" class="resource-item">
+      <span class="r-icon">${r.icon}</span>
+      <div class="r-info">
+        <div class="r-name">${r.name}</div>
+        <div class="r-desc">${r.desc}</div>
+      </div>
+      <span class="r-arrow">→</span>
+    </a>`).join('');
+  document.getElementById('dirResources').innerHTML = resList;
+}
+
+// ─── NAV ──────────────────────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  const items = document.querySelectorAll('.nav-item');
+  items.forEach(item => {
+    if (item.getAttribute('onclick')?.includes(name)) item.classList.add('active');
+  });
+  if (name === 'ranking') loadRanking();
+  if (name === 'weekly' && state.tasks) renderWeekly();
+  if (name === 'learn' && state.tasks) renderLessons();
+}
+
+// ─── ONBOARDING ───────────────────────────────────────────────────────────────
+function selectDir(dir, el) {
+  state.selectedDir = dir;
+  document.querySelectorAll('#ob-step1 .dir-option').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('ob-next1').disabled = false;
+}
+
+function showObStep2() {
+  document.getElementById('ob-step1').style.display = 'none';
+  document.getElementById('ob-step2').style.display = 'block';
+}
+
+function selectIcon(icon, el) {
+  state.selectedIcon = icon;
+  document.querySelectorAll('#ob-step2 .icon-opt').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('ob-preview-icon').textContent = icon;
+}
+
+async function finishOnboarding() {
+  try {
+    await fetch('/api/update-profile', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ userId: state.userId, icon: state.selectedIcon, direction: state.selectedDir })
+    });
+  } catch(e) {}
+  state.userIcon = state.selectedIcon;
+  state.userDirection = state.selectedDir;
+  localStorage.setItem('userIcon', state.selectedIcon);
+  localStorage.setItem('userDirection', state.selectedDir);
+  localStorage.removeItem('isNewUser');
+  document.getElementById('onboarding').style.display = 'none';
+  initDashboard();
+}
+
+// ─── TASKS ────────────────────────────────────────────────────────────────────
+async function loadTasks(dir) {
+  try {
+    const res = await fetch(`/api/tasks/${dir}`);
+    state.tasks = await res.json();
+    renderLessons();
+    renderWeekly();
+  } catch(e) { console.error('Tasks load error', e); }
+}
+
+// ─── LESSONS ─────────────────────────────────────────────────────────────────
+function renderLessons() {
+  if (!state.tasks?.learn) return;
+  const list = state.tasks.learn;
+  const level = state.currentLevel;
+  const filtered = level === 'all' ? list : list.filter(l => l.level === level);
+  const html = filtered.map((l, i) => `
+    <div class="lesson-card" id="lesson-${l.id}">
+      <div class="lesson-header" onclick="toggleLesson('${l.id}')">
+        <div class="lesson-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="lesson-title">${l.title} <span class="level-badge ${l.level}">${l.level.toUpperCase()}</span></div>
+        <span class="lesson-chevron">⌄</span>
+      </div>
+      <div class="lesson-body">
+        <div class="theory-box">${formatTheory(l.theory)}</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--neon)">🎯 Vazifa: ${l.task}</div>
+        <div class="code-editor-wrap">
+          <div class="code-editor-label">💻 Kodni yozing:</div>
+          <textarea class="code-editor" id="code-${l.id}">${l.starter_code}</textarea>
+        </div>
+        <button class="run-btn" onclick="checkCode('${l.id}','${l.solution_check}','${l.expected_output}')">▶ Tekshirish</button>
+        <div class="code-result" id="result-${l.id}" style="display:none"></div>
+      </div>
+    </div>`).join('');
+  document.getElementById('lessonsList').innerHTML = html || '<div style="text-align:center;padding:40px;color:var(--muted)">Bu darajada dars topilmadi</div>';
+}
+
+function formatTheory(text) {
+  return text
+    .replace(/```(\w*)([\s\S]*?)```/g, (m, lang, code) => `<pre>${code.trim()}</pre>`)
+    .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--text)">$1</strong>')
+    .replace(/\n/g, '<br>');
+}
+
+function toggleLesson(id) {
+  const card = document.getElementById(`lesson-${id}`);
+  card.classList.toggle('open');
+}
+
+function filterLevel(level, btn) {
+  state.currentLevel = level;
+  document.querySelectorAll('.level-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLessons();
+}
+
+async function checkCode(lessonId, check, expected) {
+  const code = document.getElementById(`code-${lessonId}`).value;
+  const resEl = document.getElementById(`result-${lessonId}`);
+  resEl.style.display = 'block';
+  resEl.textContent = '⌛ Tekshirilmoqda...';
+  resEl.className = 'code-result';
+  try {
+    const res = await fetch('/api/submit-code', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({code, check, expected})
+    });
+    const data = await res.json();
+    resEl.className = `code-result ${data.success ? 'success' : 'error'}`;
+    resEl.textContent = data.message;
+    if (data.success) {
+      const scores = state.userScores;
+      if (!scores[`lesson_${lessonId}`]) {
+        scores[`lesson_${lessonId}`] = 10;
+        localStorage.setItem('userScores', JSON.stringify(scores));
+        await fetch('/api/save-score', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({userId: state.userId, scoreType: `lesson_${lessonId}`, score: 10})
+        });
+        updateHomeStats();
+      }
     }
+  } catch { resEl.className = 'code-result error'; resEl.textContent = 'Server xatosi'; }
+}
 
-    async function updateProfile(icon, direction) {
-        const body = { userId: parseInt(userId) };
-        if (icon) body.icon = icon;
-        if (direction) body.direction = direction;
-        const res = await fetch('/api/update-profile', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
-        const data = await res.json();
-        if (data.success) {
-            currentUser = data.user;
-            currentDirection = data.user.direction;
-            document.getElementById('dirBadge').innerHTML = currentDirection || 'Yo‘nalish tanlanmagan';
-            return true;
-        }
-        return false;
-    }
+// ─── WEEKLY ───────────────────────────────────────────────────────────────────
+function renderWeekly() {
+  updateWeekSteps();
+  if (state.weeklyPhase === 'test') renderTest();
+  else if (state.weeklyPhase === 'logic') renderLogic();
+  else if (state.weeklyPhase === 'code') renderWeeklyCode();
+  else renderWeeklyDone();
+}
 
-    async function saveScore(taskId, score) {
-        const res = await fetch('/api/save-score', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ userId: parseInt(userId), taskId, score }) });
-        const data = await res.json();
-        if (data.success) {
-            userTasks[taskId] = score;
-            localStorage.setItem('userTasks', JSON.stringify(userTasks));
-        }
-    }
+function updateWeekSteps() {
+  const phases = ['test','logic','code','done'];
+  const curr = phases.indexOf(state.weeklyPhase);
+  phases.forEach((p, i) => {
+    const el = document.getElementById(`step-${p}`);
+    if (!el) return;
+    el.className = 'week-step' + (i < curr ? ' done' : i === curr ? ' active-step' : '');
+  });
+}
 
-    window.submitCode = async (taskId, expectedKeyword, points) => {
-        const codeArea = document.getElementById(`code_${taskId}`);
-        if (!codeArea) { alert("Kod maydoni topilmadi!"); return; }
-        const userCode = codeArea.value.trim();
-        if (!userCode) { alert("Iltimos, kod yozing!"); return; }
+function renderTest() {
+  if (!state.tasks?.weekly?.tests) return;
+  const q = state.tasks.weekly.tests[state.testIdx];
+  const total = state.tasks.weekly.tests.length;
+  const html = `
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span>Savol ${state.testIdx+1} / ${total}</span><span>Ball: ${state.testScore}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${(state.testIdx/total)*100}%"></div></div>
+    </div>
+    <div class="test-card">
+      <div class="test-q">❓ ${q.q}</div>
+      <div class="test-opts">
+        ${q.options.map((o,i)=>`<div class="test-opt" id="opt-${i}" onclick="answerTest(${i},${q.answer})">${String.fromCharCode(65+i)}. ${o}</div>`).join('')}
+      </div>
+    </div>`;
+  document.getElementById('weeklyContent').innerHTML = html;
+}
 
-        try {
-            const res = await fetch('/api/submit-code', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: parseInt(userId),
-                    taskId: taskId,
-                    userCode: userCode,
-                    expectedKeyword: expectedKeyword,
-                    points: points
-                })
-            });
-            const data = await res.json();
-            alert(data.message);
-            if (data.success) {
-                userTasks[taskId] = points;
-                localStorage.setItem('userTasks', JSON.stringify(userTasks));
-            }
-        } catch (err) {
-            alert("Serverda xatolik: " + err.message);
-        }
-    };
+function answerTest(chosen, correct) {
+  document.querySelectorAll('.test-opt').forEach((el,i) => {
+    el.onclick = null;
+    if (i === correct) el.classList.add('correct');
+    else if (i === chosen) el.classList.add('wrong');
+  });
+  if (chosen === correct) state.testScore++;
+  setTimeout(() => {
+    state.testIdx++;
+    if (state.testIdx >= state.tasks.weekly.tests.length) {
+      state.weeklyPhase = 'logic';
+      state.logicIdx = 0;
+      renderWeekly();
+    } else renderTest();
+  }, 700);
+}
 
-    window.checkLesson = async (idx, correctAnswer, points, direction) => {
-        const userCode = document.getElementById(`code_lesson_${idx}`).value.trim();
-        const savedProgress = JSON.parse(localStorage.getItem('lessonProgress') || '{}');
-        const key = `${direction}_${idx}`;
-        
-        if (!userCode) { alert("Iltimos, kod yozing!"); return; }
-        
-        if (userCode.toLowerCase().includes(correctAnswer.toLowerCase())) {
-            if (!savedProgress[key]) {
-                savedProgress[key] = true;
-                localStorage.setItem('lessonProgress', JSON.stringify(savedProgress));
-                await saveScore(`lesson_${key}`, points);
-                alert(`✅ To‘g‘ri! +${points} ball. Dars bajarildi!`);
-            } else {
-                alert(`✅ Siz bu darsni allaqachon bajargan edingiz (+${points} ball).`);
-            }
-            document.getElementById(`lesson_${idx}`).classList.add('completed');
-        } else {
-            alert(`❌ Xato. To‘g‘ri javobda quyidagi so‘z bo‘lishi kerak: "${correctAnswer}"`);
-        }
-    };
+function renderLogic() {
+  if (!state.tasks?.weekly?.logic) return;
+  const q = state.tasks.weekly.logic[state.logicIdx];
+  const total = state.tasks.weekly.logic.length;
+  const html = `
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span>Mantiqiy savol ${state.logicIdx+1} / ${total}</span><span>Ball: ${state.logicScore}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${(state.logicIdx/total)*100}%;background:linear-gradient(90deg,var(--neon3),#00cc7a)"></div></div>
+    </div>
+    <div class="test-card">
+      <div class="test-q">🧠 ${q.q}</div>
+      <input type="text" class="logic-input" id="logicAns" placeholder="Javobingizni yozing...">
+      <button class="check-btn" onclick="checkLogic('${q.answer}')">Tekshirish ✓</button>
+      <div id="logicResult" style="margin-top:10px;font-size:13px"></div>
+    </div>`;
+  document.getElementById('weeklyContent').innerHTML = html;
+  document.getElementById('logicAns').addEventListener('keydown', e => e.key==='Enter' && checkLogic(q.answer));
+}
 
-    window.submitTest = async (taskId, correct, points) => {
-        const selected = document.querySelector(`input[name="${taskId}"]:checked`);
-        if (!selected) { alert("Javob tanlang!"); return; }
-        const isCorrect = selected.value === correct;
-        const earned = isCorrect ? points : 0;
-        await saveScore(taskId, earned);
-        alert(isCorrect ? `✅ To‘g‘ri! +${points} ball` : `❌ Xato. To‘g‘ri javob: ${correct}`);
-        openModal('weeklyTasks');
-    };
+function checkLogic(answer) {
+  const val = document.getElementById('logicAns').value.trim().toLowerCase();
+  const correct = val.includes(answer.toLowerCase());
+  const resEl = document.getElementById('logicResult');
+  resEl.textContent = correct ? '✅ To\'g\'ri! Zo\'r!' : `❌ Noto'g'ri. Javob: "${answer}"`;
+  resEl.style.color = correct ? 'var(--neon3)' : 'var(--danger)';
+  if (correct) state.logicScore++;
+  document.querySelector('.check-btn').disabled = true;
+  setTimeout(() => {
+    state.logicIdx++;
+    if (state.logicIdx >= state.tasks.weekly.logic.length) {
+      state.weeklyPhase = 'code';
+      state.codeIdx = 0;
+      renderWeekly();
+    } else renderLogic();
+  }, 900);
+}
 
-    function closeModal() { document.getElementById('globalModal').style.display = 'none'; }
-    window.selectDirection = async (dir) => { await updateProfile(null, dir); closeModal(); alert(`✅ ${dir} yo‘nalishi tanlandi!`); fetchUser(); };
-    window.updateIcon = async (ic) => { await updateProfile(ic, null); closeModal(); alert("Icon yangilandi"); fetchUser(); };
+function renderWeeklyCode() {
+  if (!state.tasks?.weekly?.coding) return;
+  const q = state.tasks.weekly.coding[state.codeIdx];
+  const total = state.tasks.weekly.coding.length;
+  const html = `
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span>Kod topshirig'i ${state.codeIdx+1} / ${total}</span><span>Ball: ${state.codeScore}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${(state.codeIdx/total)*100}%;background:linear-gradient(90deg,var(--neon2),#b47fff)"></div></div>
+    </div>
+    <div class="test-card">
+      <div class="test-q">💻 ${q.q}</div>
+      <textarea class="code-editor" id="weekCode" style="margin-bottom:12px">${q.starter}</textarea>
+      <button class="run-btn" onclick="checkWeekCode('${q.check}')">▶ Tekshirish</button>
+      <div id="weekCodeResult" style="margin-top:10px"></div>
+    </div>`;
+  document.getElementById('weeklyContent').innerHTML = html;
+}
 
-    async function openModal(type) {
-        const modalBody = document.getElementById('modalBody');
-        if (type === 'selectDirection') {
-            modalBody.innerHTML = `<h2>🎯 Yo‘nalish tanlash</h2><div class="icon-grid"><div class="icon-option" onclick="selectDirection('suniy intellekt')">🤖 Suniy intellekt</div><div class="icon-option" onclick="selectDirection('axborot xavfsizligi')">🔒 Axborot xavfsizligi</div><div class="icon-option" onclick="selectDirection('statistika')">📊 Statistika</div></div>`;
-        } 
-        else if (type === 'directionInfo') {
-            if (!currentDirection) { alert("Avval yo‘nalish tanlang!"); openModal('selectDirection'); return; }
-            const infoMap = {
-                'suniy intellekt': `<h2>🤖 Suniy intellekt</h2><p>Sun’iy intellekt – kompyuterlarni inson kabi fikrlashga o‘rgatish. Asosiy texnologiyalar: Python, NumPy, Pandas, TensorFlow, PyTorch, scikit-learn.</p><p><strong>Resurslar:</strong> <a href='https://learnpython.org' target='_blank'>LearnPython</a>, <a href='https://tensorflow.org' target='_blank'>TensorFlow</a>, <a href='https://kaggle.com' target='_blank'>Kaggle</a></p><iframe width='100%' height='200' src='https://www.youtube.com/embed/aircAruvnKk' frameborder='0'></iframe>`,
-                'axborot xavfsizligi': `<h2>🔒 Axborot Xavfsizligi</h2><p>Maʼlumotlarni ruxsatsiz kirishdan himoya qilish. Asosiy sohalar: Kali Linux, kriptografiya, tarmoq xavfsizligi, penetration testing, CTF.</p><p><strong>Resurslar:</strong> <a href='https://kali.org' target='_blank'>Kali Linux</a>, <a href='https://tryhackme.com' target='_blank'>TryHackMe</a></p><iframe width='100%' height='200' src='https://www.youtube.com/embed/5rJ1hP2yHhU' frameborder='0'></iframe>`,
-                'statistika': `<h2>📊 Statistika</h2><p>Maʼlumotlarni to‘plash, tahlil qilish va xulosa chiqarish. Python, Pandas, Matplotlib, Seaborn, SciPy asosiy vositalar.</p><p><strong>Resurslar:</strong> <a href='https://scipy.org' target='_blank'>SciPy</a>, <a href='https://kaggle.com' target='_blank'>Kaggle</a></p><iframe width='100%' height='200' src='https://www.youtube.com/embed/zOUJdP2jvNg' frameborder='0'></iframe>`
-            };
-            modalBody.innerHTML = infoMap[currentDirection];
-        }
-        else if (type === 'learning') {
-            if (!currentDirection) { alert("Avval yo‘nalish tanlang!"); openModal('selectDirection'); return; }
-            
-            const lessons = {
-                'suniy intellekt': [
-                    { title: "1. Python asoslari", theory: "Python – bu yuqori darajali dasturlash tili. U sodda va o‘qishga qulay. O‘zgaruvchilar, ma'lumot turlari, shart operatorlari va sikllar mavjud.", video: "https://www.youtube.com/embed/4F2m91eKmts", task: "print('Hello World') kodini yozing", check: "print", points: 10, example: "print('Hello World')" },
-                    { title: "2. Funksiyalar", theory: "Funksiya – qayta ishlatiladigan kod bloki. def bilan yaratiladi.", video: "https://www.youtube.com/embed/9Os0o3wzS_I", task: "Faktorial hisoblaydigan funksiya yozing", check: "return n * factorial(n-1)", points: 20, example: "def factorial(n):\n    if n <= 1: return 1\n    return n * factorial(n-1)" },
-                    { title: "3. List va ma'lumot tuzilmalari", theory: "List – o‘zgaruvchan, tartibli kolleksiya.", video: "https://www.youtube.com/embed/W8KRzmVUuEI", task: "[1,2,3] listiga 4 ni qo‘shing", check: "append", points: 15, example: "my_list = [1,2,3]\nmy_list.append(4)" }
-                ],
-                'axborot xavfsizligi': [
-                    { title: "1. Kali Linux asoslari", theory: "Kali Linux – penetration testing uchun distributiv.", video: "https://www.youtube.com/embed/3jYhWvqvsAk", task: "nmap buyrug'ini yozing", check: "nmap", points: 10, example: "nmap -sP 192.168.1.1/24" },
-                    { title: "2. Kriptografiya", theory: "Caesar shifri – harflarni surish.", video: "https://www.youtube.com/embed/6WYpCayVU8s", task: "Caesar shifri uchun kod", check: "chr(ord(c)+3)", points: 20, example: "def caesar(text):\n    return ''.join(chr(ord(c)+3) for c in text)" }
-                ],
-                'statistika': [
-                    { title: "1. Python va Pandas", theory: "Pandas – ma'lumot tahlili.", video: "https://www.youtube.com/embed/vmEHCJofslg", task: "DataFrame yarating", check: "DataFrame", points: 10, example: "import pandas as pd\ndf = pd.DataFrame({'A':[1,2]})" },
-                    { title: "2. Matplotlib", theory: "Grafik chizish.", video: "https://www.youtube.com/embed/3Xc3CA656Y4", task: "Chiziqli grafik chizing", check: "plot", points: 20, example: "import matplotlib.pyplot as plt\nplt.plot([1,2,3])" }
-                ]
-            };
-            
-            let html = `<h2>📘 Boshlang‘ich bilimlar – ${currentDirection}</h2>`;
-            const lessonArr = lessons[currentDirection] || [];
-            const savedProgress = JSON.parse(localStorage.getItem('lessonProgress') || '{}');
-            
-            lessonArr.forEach((l, idx) => {
-                const completed = savedProgress[`${currentDirection}_${idx}`] || false;
-                html += `
-                    <div class="lesson-card" id="lesson_${idx}" style="${completed ? 'background:#e0ffe0' : 'background:white'}">
-                        <h3 style="color:#1E2A5E;">${l.title} ${completed ? '✅ Bajarilgan' : '📖'}</h3>
-                        <div style="background:#f0f4f8; padding:12px; border-radius:12px; margin:10px 0">
-                            <h4>📖 Nazariya</h4>
-                            <p>${l.theory}</p>
-                        </div>
-                        ${l.video ? `<div style="margin:10px 0"><iframe width="100%" height="200" src="${l.video}" frameborder="0"></iframe></div>` : ''}
-                        <div class="code-block">
-                            <strong>💡 Misol:</strong><br>
-                            <pre style="margin:5px 0; font-family:monospace;">${l.example}</pre>
-                        </div>
-                        <div>
-                            <p><strong>💻 Vazifa:</strong> ${l.task}</p>
-                            <textarea id="code_lesson_${idx}" rows="4" placeholder="Kodingizni yozing..."></textarea><br>
-                            <button class="check-btn" onclick="checkLesson(${idx}, '${l.check}', ${l.points}, '${currentDirection}')">🔍 Tekshirish</button>
-                            <span style="margin-left:10px">🎯 Ball: ${l.points}</span>
-                        </div>
-                    </div>
-                    <hr>
-                `;
-            });
-            modalBody.innerHTML = html;
-        }
-        else if (type === 'weeklyTasks') {
-            if (!currentDirection) { alert("Avval yo‘nalish tanlang!"); openModal('selectDirection'); return; }
-            modalBody.innerHTML = `<h2>📋 Haftalik topshiriqlar (${currentDirection})</h2><div id='tasksList'>Yuklanmoqda...</div>`;
-            const res = await fetch(`/api/tasks/${currentDirection}`);
-            const tasks = await res.json();
-            if (!tasks.length) { document.getElementById('tasksList').innerHTML = '<p>Hozircha topshiriqlar mavjud emas</p>'; return; }
-            let html = '';
-            for (let t of tasks) {
-                const saved = userTasks[t.id] || 0;
-                if (t.type === 'test') {
-                    html += `<div class='task-item'><b>${t.title}</b><br>${t.question}<br>${t.options.map(opt => `<label><input type='radio' name='${t.id}' value='${opt}'> ${opt}</label>`).join(' ')}<br><button class='check-btn' onclick='submitTest("${t.id}", "${t.answer}", ${t.points})'>✅ Javob</button> <span>Ball: ${saved}/${t.points}</span></div>`;
-                } else {
-                    html += `<div class='task-item' id='task_${t.id}'><b>${t.title}</b><br>${t.question}<br><textarea id='code_${t.id}' rows='4' placeholder='Kodingizni yozing...'></textarea><br><button class='check-btn' onclick='submitCode("${t.id}", "${t.solution}", ${t.points})'>💻 Tekshirish</button> <span>Ball: ${saved}/${t.points}</span></div>`;
-                }
-            }
-            document.getElementById('tasksList').innerHTML = html;
-        }
-        else if (type === 'ranking') {
-            const res = await fetch('/api/ranking');
-            const ranking = await res.json();
-            modalBody.innerHTML = `<h2>🏆 Umumiy reyting</h2><canvas id='rankChart' style='max-height:400px'></canvas><ul>${ranking.map((r,i) => `<li>${i+1}. ${r.icon} ${r.name} — ${r.total} ball</li>`).join('')}</ul>`;
-            setTimeout(() => {
-                const ctx = document.getElementById('rankChart').getContext('2d');
-                new Chart(ctx, { type: 'bar', data: { labels: ranking.map(r => r.name), datasets: [{ label: 'Ball', data: ranking.map(r => r.total), backgroundColor: '#D4AF37' }] } });
-            }, 100);
-        }
-        else if (type === 'settings') {
-            modalBody.innerHTML = `<h2>⚙️ Sozlamalar</h2><div class='icon-grid'>${['😊','🤖','👨‍💻','🦁','🐱','🐻','🐼','🐧','🦊','🐝','🐙','🦄'].map(ic => `<div class='icon-option' onclick='updateIcon("${ic}")'>${ic}</div>`).join('')}</div><hr><button onclick="window.open('https://t.me/+1WNbg57C2FQwZjAy','_blank')" class='icon-btn'>📱 Telegram guruh</button><br><br><button onclick="logout()" class='logout-btn'>🚪 Saytdan chiqish</button>`;
-        }
-        document.getElementById('globalModal').style.display = 'flex';
-    }
+function checkWeekCode(check) {
+  const code = document.getElementById('weekCode').value;
+  const passed = code.includes(check);
+  const resEl = document.getElementById('weekCodeResult');
+  resEl.textContent = passed ? '✅ To\'g\'ri! Ajoyib!' : `❌ Kodda "${check}" bo'lishi kerak`;
+  resEl.style.color = passed ? 'var(--neon3)' : 'var(--danger)';
+  if (passed) state.codeScore++;
+  setTimeout(() => {
+    state.codeIdx++;
+    if (state.codeIdx >= state.tasks.weekly.coding.length) {
+      saveWeeklyScores();
+      state.weeklyPhase = 'done';
+      renderWeekly();
+    } else renderWeeklyCode();
+  }, 900);
+}
 
-    document.getElementById('logoutBtn').onclick = () => logout();
-    document.getElementById('openSettings').onclick = () => openModal('settings');
-    function logout() { localStorage.clear(); window.location.href = '/'; }
-    fetchUser();
+async function saveWeeklyScores() {
+  const week = 1;
+  const calls = [
+    fetch('/api/save-score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:state.userId,scoreType:'test',score:state.testScore,week})}),
+    fetch('/api/save-score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:state.userId,scoreType:'logic',score:state.logicScore,week})}),
+    fetch('/api/save-score',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:state.userId,scoreType:'code',score:state.codeScore,week})})
+  ];
+  await Promise.all(calls).catch(()=>{});
+  state.userScores[`test_week${week}`] = state.testScore;
+  state.userScores[`logic_week${week}`] = state.logicScore;
+  state.userScores[`code_week${week}`] = state.codeScore;
+  localStorage.setItem('userScores', JSON.stringify(state.userScores));
+  updateHomeStats();
+}
+
+function renderWeeklyDone() {
+  const total = state.testScore + state.logicScore + state.codeScore;
+  const maxScore = 30;
+  const pct = Math.round((total/maxScore)*100);
+  let emoji = pct >= 80 ? '🏆' : pct >= 60 ? '⭐' : '💪';
+  const html = `
+    <div class="score-summary">
+      <div style="font-size:48px;margin-bottom:8px">${emoji}</div>
+      <div class="score-big">${total}</div>
+      <div style="font-size:14px;color:var(--muted);margin:8px 0">Jami ${maxScore} balldan</div>
+      <div style="margin:16px 0;display:flex;gap:24px;justify-content:center">
+        <div style="text-align:center"><div style="font-size:22px;font-weight:800;font-family:'Space Mono',monospace;color:var(--neon)">${state.testScore}/20</div><div style="font-size:11px;color:var(--muted)">Test</div></div>
+        <div style="text-align:center"><div style="font-size:22px;font-weight:800;font-family:'Space Mono',monospace;color:var(--neon3)">${state.logicScore}/5</div><div style="font-size:11px;color:var(--muted)">Mantiq</div></div>
+        <div style="text-align:center"><div style="font-size:22px;font-weight:800;font-family:'Space Mono',monospace;color:#b47fff">${state.codeScore}/5</div><div style="font-size:11px;color:var(--muted)">Kod</div></div>
+      </div>
+      <button class="next-btn" style="max-width:280px;margin:0 auto" onclick="restartWeekly()">🔄 Qaytadan urinish</button>
+      <button class="next-btn" style="max-width:280px;margin:8px auto 0;background:linear-gradient(135deg,var(--neon2),var(--neon))" onclick="showPage('ranking')">🏆 Reytingni ko'rish</button>
+    </div>`;
+  document.getElementById('weeklyContent').innerHTML = html;
+}
+
+function restartWeekly() {
+  state.weeklyPhase = 'test';
+  state.testIdx = 0; state.testScore = 0;
+  state.logicIdx = 0; state.logicScore = 0;
+  state.codeIdx = 0; state.codeScore = 0;
+  renderWeekly();
+}
+
+// ─── RANKING ──────────────────────────────────────────────────────────────────
+async function loadRanking() {
+  try {
+    const res = await fetch('/api/ranking?week=1');
+    const data = await res.json();
+    renderRanking(data);
+  } catch { document.getElementById('rankingList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Ma\'lumot yuklanmadi</div>'; }
+}
+
+function renderRanking(data) {
+  if (!data.length) {
+    document.getElementById('rankingList').innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted)">Hali reyting yo\'q. Haftalik topshiriqni bajaring!</div>';
+    document.getElementById('chartBars').innerHTML = '<div style="color:var(--muted);font-size:12px;margin:auto">Ma\'lumot yo\'q</div>';
+    document.getElementById('statRank').textContent = '#—';
+    return;
+  }
+  const top = data.slice(0,10);
+  const maxScore = Math.max(...top.map(u=>u.weeklyScore));
+  // chart
+  const chartHtml = top.map(u => `
+    <div class="bar-wrap">
+      <div class="bar-val">${u.weeklyScore}</div>
+      <div class="bar" style="height:${maxScore>0?(u.weeklyScore/maxScore)*160:4}px"></div>
+      <div class="bar-name">${u.icon||'😊'}</div>
+    </div>`).join('');
+  document.getElementById('chartBars').innerHTML = chartHtml;
+  // list
+  const medals = ['🥇','🥈','🥉'];
+  const posClass = ['gold','silver','bronze'];
+  const listHtml = top.map((u,i) => {
+    const dir = DIR_INFO[u.direction];
+    return `<div class="rank-row">
+      <div class="rank-pos ${posClass[i]||''}">${medals[i]||i+1}</div>
+      <div class="rank-avatar">${u.icon||'😊'}</div>
+      <div style="flex:1"><div class="rank-name">${u.name} ${u.surname}</div><div class="rank-dir">${dir?dir.name:'—'}</div></div>
+      <div class="rank-score">${u.weeklyScore}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('rankingList').innerHTML = listHtml;
+  // user rank
+  const myRank = data.findIndex(u => u.id == state.userId);
+  document.getElementById('statRank').textContent = myRank >= 0 ? `#${myRank+1}` : '#—';
+}
+
+// ─── AI CHAT ──────────────────────────────────────────────────────────────────
+const CHAT_SYSTEM = {
+  ai: "Sen TSUE universiteti Sun'iy Intellekt yo'nalishi uchun AI yordamchisisan. Faqat o'zbek tilida javob ber. ML, Python, Data Science, Neural Networks haqida tushuntir. Qisqa, aniq va misollar bilan javob ber. 2-3 jumlada.",
+  security: "Sen TSUE universiteti Axborot Xavfsizligi yo'nalishi uchun AI yordamchisisan. Faqat o'zbek tilida javob ber. Kriptografiya, Cybersecurity, Network Security haqida tushuntir. Qisqa, aniq javob ber. 2-3 jumlada.",
+  statistics: "Sen TSUE universiteti Statistika yo'nalishi uchun AI yordamchisisan. Faqat o'zbek tilida javob ber. Statistika, Pandas, Data Analysis haqida tushuntir. Qisqa, aniq va formulalar bilan javob ber. 2-3 jumlada."
+};
+
+const chatHistory = [];
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  appendMsg(msg, 'user');
+  chatHistory.push({role:'user',content:msg});
+  const typingEl = appendMsg('...', 'bot typing');
+  try {
+    const sysPrompt = CHAT_SYSTEM[state.userDirection] || CHAT_SYSTEM.ai;
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        system: sysPrompt,
+        messages: chatHistory.slice(-10)
+      })
+    });
+    const data = await response.json();
+    const reply = data.content?.[0]?.text || 'Javob olinmadi';
+    typingEl.className = 'chat-msg bot';
+    typingEl.textContent = reply;
+    chatHistory.push({role:'assistant',content:reply});
+  } catch(e) {
+    typingEl.className = 'chat-msg bot';
+    typingEl.textContent = '⚠️ AI hozir mavjud emas. Keyinroq urinib ko\'ring.';
+  }
+  document.getElementById('chatMsgs').scrollTop = 999999;
+}
+
+function appendMsg(text, cls) {
+  const el = document.createElement('div');
+  el.className = `chat-msg ${cls}`;
+  el.textContent = text;
+  document.getElementById('chatMsgs').appendChild(el);
+  document.getElementById('chatMsgs').scrollTop = 999999;
+  return el;
+}
+
+// Add chat nav
+document.querySelector('.nav-item[onclick*="home"]').insertAdjacentHTML('afterend',
+  '<div class="nav-item" onclick="showPage(\'chat\')"><span class="nav-icon">🤖</span> AI Yordamchi</div>'
+);
+
+// ─── SETTINGS ACTIONS ─────────────────────────────────────────────────────────
+async function changeIcon(icon, el) {
+  state.userIcon = icon;
+  localStorage.setItem('userIcon', icon);
+  document.querySelectorAll('.icon-pick-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  updateSidebar();
+  try {
+    await fetch('/api/update-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:state.userId,icon,direction:state.userDirection})});
+    const msg = document.getElementById('iconSaveMsg');
+    msg.style.display = 'block';
+    setTimeout(()=>msg.style.display='none', 2000);
+  } catch {}
+}
+
+async function changeDirection(dir, el) {
+  state.userDirection = dir;
+  localStorage.setItem('userDirection', dir);
+  document.querySelectorAll('#page-settings .dir-option').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  updateSidebar();
+  updateDirectionUI(dir);
+  await loadTasks(dir);
+  try {
+    await fetch('/api/update-profile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:state.userId,icon:state.userIcon,direction:dir})});
+  } catch {}
+}
+
+function logout() {
+  localStorage.clear();
+  window.location.href = '/';
+}
 </script>
 </body>
 </html>
