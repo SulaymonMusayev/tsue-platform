@@ -1,197 +1,402 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <title>TSUE Platform | Kirish</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0a0f2a 0%, #1a1f3a 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .container {
-            background: rgba(255,255,255,0.98);
-            border-radius: 32px;
-            padding: 40px;
-            width: 100%;
-            max-width: 460px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-        }
-        h1 {
-            font-size: 1.8rem;
-            text-align: center;
-            margin-bottom: 32px;
-            background: linear-gradient(135deg, #1E2A5E, #D4AF37);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .tabs {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 28px;
-        }
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            background: #f0f2f5;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            border: none;
-        }
-        .tab.active {
-            background: #1E2A5E;
-            color: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .form {
-            display: none;
-        }
-        .form.active {
-            display: block;
-            animation: fadeIn 0.3s;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        input {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 16px;
-            border: 1px solid #ddd;
-            border-radius: 28px;
-            font-size: 1rem;
-            transition: 0.2s;
-        }
-        input:focus {
-            outline: none;
-            border-color: #D4AF37;
-            box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
-        }
-        button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #1E2A5E, #2a3a7a);
-            color: white;
-            border: none;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        button:hover {
-            transform: scale(1.02);
-            background: linear-gradient(135deg, #15204a, #1E2A5E);
-        }
-        .msg {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 28px;
-            text-align: center;
-            display: none;
-        }
-        .msg.error {
-            background: #fee2e2;
-            color: #b91c1c;
-            display: block;
-        }
-        .msg.success {
-            background: #e0f2fe;
-            color: #0f3b5c;
-            display: block;
-        }
-        footer {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 0.8rem;
-            color: #888;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSUE · Raqamli Ta'lim Platformasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050810;
+    --bg2: #080d1a;
+    --card: #0d1525;
+    --border: rgba(0,200,255,0.15);
+    --neon: #00c8ff;
+    --neon2: #7b2fff;
+    --neon3: #00ff9d;
+    --text: #e8eeff;
+    --muted: #5a6a8a;
+    --danger: #ff4d6d;
+    --radius: 16px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  /* ── GRID BG ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* ── GLOW ORBS ── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+  }
+  .orb1 { width:400px; height:400px; background:rgba(0,200,255,0.08); top:-100px; left:-100px; }
+  .orb2 { width:300px; height:300px; background:rgba(123,47,255,0.1); bottom:-50px; right:-50px; animation-delay:-4s; }
+  .orb3 { width:200px; height:200px; background:rgba(0,255,157,0.06); top:50%; left:50%; transform:translate(-50%,-50%); animation-delay:-2s; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+
+  /* ── MAIN WRAPPER ── */
+  .wrapper {
+    display: flex;
+    width: min(900px, 96vw);
+    height: min(600px, 96vh);
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 60px rgba(0,200,255,0.08), 0 0 120px rgba(123,47,255,0.05);
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.6s cubic-bezier(.16,1,.3,1);
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── LEFT PANEL ── */
+  .left {
+    flex: 1;
+    background: linear-gradient(135deg, #060a18 0%, #0a1030 100%);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .left::after {
+    content: '';
+    position: absolute; right: 0; top: 0; bottom: 0; width: 1px;
+    background: linear-gradient(180deg, transparent, var(--neon), transparent);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 40px;
+  }
+  .logo-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--neon), var(--neon2));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 20px rgba(0,200,255,0.4);
+  }
+  .logo-text { font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+  .logo-sub { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; font-family: 'Space Mono', monospace; }
+
+  .hero-title {
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .hero-title span {
+    background: linear-gradient(90deg, var(--neon), var(--neon2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-desc { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 32px; }
+
+  .directions {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .dir-chip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 12px;
+    background: rgba(0,200,255,0.03);
+    transition: all 0.3s;
+  }
+  .dir-chip:hover { border-color: var(--neon); background: rgba(0,200,255,0.06); }
+  .dir-chip .chip-icon { font-size: 18px; }
+  .dir-chip .chip-info { display: flex; flex-direction: column; }
+  .dir-chip .chip-name { font-weight: 700; font-size: 13px; }
+  .dir-chip .chip-desc { color: var(--muted); font-size: 11px; margin-top: 1px; }
+
+  /* ── RIGHT PANEL ── */
+  .right {
+    width: 380px;
+    background: var(--card);
+    padding: 40px 36px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+  }
+
+  .tabs {
+    display: flex; margin-bottom: 32px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px; padding: 4px;
+    border: 1px solid var(--border);
+  }
+  .tab-btn {
+    flex: 1; padding: 9px; border: none;
+    background: transparent; color: var(--muted);
+    font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+    cursor: pointer; border-radius: 7px; transition: all 0.3s;
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(0,200,255,0.15), rgba(123,47,255,0.15));
+    color: var(--neon); border: 1px solid rgba(0,200,255,0.2);
+  }
+
+  .form-section { display: none; }
+  .form-section.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  .form-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+  .form-sub { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+
+  .input-group { margin-bottom: 14px; }
+  .input-group label { display: block; font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; font-family: 'Space Mono', monospace; }
+  .input-group input {
+    width: 100%; padding: 11px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text);
+    font-family: 'Syne', sans-serif; font-size: 14px;
+    transition: all 0.3s; outline: none;
+  }
+  .input-group input:focus { border-color: var(--neon); background: rgba(0,200,255,0.04); box-shadow: 0 0 0 3px rgba(0,200,255,0.08); }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .submit-btn {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--neon), var(--neon2));
+    border: none; border-radius: 10px;
+    color: #fff; font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    margin-top: 6px; position: relative; overflow: hidden;
+    transition: all 0.3s; letter-spacing: 0.5px;
+  }
+  .submit-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(0,200,255,0.3); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn.loading { pointer-events: none; }
+  .submit-btn .btn-text { transition: opacity 0.2s; }
+  .submit-btn .btn-loader { position:absolute; inset:0; display:none; align-items:center; justify-content:center; }
+  .submit-btn.loading .btn-text { opacity:0; }
+  .submit-btn.loading .btn-loader { display:flex; }
+  .spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  .msg {
+    margin-top: 12px; padding: 10px 14px; border-radius: 8px;
+    font-size: 12px; text-align: center; display: none;
+  }
+  .msg.error { background: rgba(255,77,109,0.1); border: 1px solid rgba(255,77,109,0.3); color: var(--danger); display: block; }
+  .msg.success { background: rgba(0,255,157,0.1); border: 1px solid rgba(0,255,157,0.3); color: var(--neon3); display: block; }
+
+  @media (max-width: 640px) {
+    .left { display: none; }
+    .wrapper { height: auto; min-height: 100vh; border-radius: 0; }
+    .right { width: 100%; padding: 40px 24px; min-height: 100vh; justify-content: center; }
+  }
+</style>
 </head>
 <body>
-<div class="container">
-    <h1>📘 TSUE <span style="color:#D4AF37;">CAREER</span></h1>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<div class="wrapper">
+  <!-- LEFT -->
+  <div class="left">
+    <div class="logo">
+      <div class="logo-icon">🎓</div>
+      <div>
+        <div class="logo-text">TSUE Platform</div>
+        <div class="logo-sub">Digital Education</div>
+      </div>
+    </div>
+    <div class="hero-title">
+      Kelajak<br><span>texnologiyalarini</span><br>o'rgan
+    </div>
+    <p class="hero-desc">
+      Toshkent davlat iqtisodiyot universiteti — Raqamli iqtisodiyot va axborot texnologiyalari fakulteti talabalariga mo'ljallangan interaktiv ta'lim platformasi.
+    </p>
+    <div class="directions">
+      <div class="dir-chip">
+        <span class="chip-icon">🤖</span>
+        <div class="chip-info">
+          <span class="chip-name">Sun'iy Intellekt</span>
+          <span class="chip-desc">ML · Python · Neural Networks</span>
+        </div>
+      </div>
+      <div class="dir-chip">
+        <span class="chip-icon">🔐</span>
+        <div class="chip-info">
+          <span class="chip-name">Axborot Xavfsizligi</span>
+          <span class="chip-desc">Cybersecurity · Cryptography</span>
+        </div>
+      </div>
+      <div class="dir-chip">
+        <span class="chip-icon">📊</span>
+        <div class="chip-info">
+          <span class="chip-name">Statistika</span>
+          <span class="chip-desc">Data Analysis · Pandas · Scipy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
     <div class="tabs">
-        <button class="tab active" data-tab="register">📝 Ro'yxatdan o'tish</button>
-        <button class="tab" data-tab="login">🔐 Profilga kirish</button>
+      <button class="tab-btn active" onclick="switchTab('login')">Kirish</button>
+      <button class="tab-btn" onclick="switchTab('register')">Ro'yxat</button>
     </div>
 
-    <div id="register" class="form active">
-        <input type="text" id="regName" placeholder="Ism">
-        <input type="text" id="regSurname" placeholder="Familiya">
-        <input type="password" id="regPassword" placeholder="Parol">
-        <button onclick="register()">📌 Ro'yxatdan o'tish</button>
+    <!-- LOGIN -->
+    <div class="form-section active" id="loginForm">
+      <div class="form-title">Xush kelibsiz 👋</div>
+      <div class="form-sub">Hisobingizga kiring</div>
+      <div class="input-group">
+        <label>Ism</label>
+        <input type="text" id="loginName" placeholder="Masalan: Alisher" autocomplete="given-name">
+      </div>
+      <div class="input-group">
+        <label>Familiya</label>
+        <input type="text" id="loginSurname" placeholder="Masalan: Karimov" autocomplete="family-name">
+      </div>
+      <div class="input-group">
+        <label>Parol</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="submit-btn" onclick="login()">
+        <span class="btn-text">Kirish</span>
+        <span class="btn-loader"><div class="spinner"></div></span>
+      </button>
+      <div class="msg" id="loginMsg"></div>
     </div>
 
-    <div id="login" class="form">
-        <input type="text" id="loginName" placeholder="Ism">
-        <input type="text" id="loginSurname" placeholder="Familiya">
-        <input type="password" id="loginPassword" placeholder="Parol">
-        <button onclick="login()">🚀 Kirish</button>
+    <!-- REGISTER -->
+    <div class="form-section" id="registerForm">
+      <div class="form-title">Hisob yaratish ✨</div>
+      <div class="form-sub">Platformaga qo'shiling</div>
+      <div class="row2">
+        <div class="input-group">
+          <label>Ism</label>
+          <input type="text" id="regName" placeholder="Ismingiz" autocomplete="given-name">
+        </div>
+        <div class="input-group">
+          <label>Familiya</label>
+          <input type="text" id="regSurname" placeholder="Familiyangiz" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="input-group">
+        <label>Parol</label>
+        <input type="password" id="regPassword" placeholder="Kamida 6 ta belgi" autocomplete="new-password">
+      </div>
+      <div class="input-group">
+        <label>Parolni takrorlang</label>
+        <input type="password" id="regPassword2" placeholder="Parolni tasdiqlang" autocomplete="new-password">
+      </div>
+      <button class="submit-btn" onclick="register()">
+        <span class="btn-text">Ro'yxatdan o'tish</span>
+        <span class="btn-loader"><div class="spinner"></div></span>
+      </button>
+      <div class="msg" id="registerMsg"></div>
     </div>
-
-    <div id="message" class="msg"></div>
-    <footer>© TSUE Programming Career — bilim sari bir qadam</footer>
+  </div>
 </div>
 
 <script>
-    document.querySelectorAll('.tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(tab.dataset.tab).classList.add('active');
-        });
-    });
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (tab==='login' && i===0)||(tab==='register' && i===1)));
+  document.getElementById('loginForm').classList.toggle('active', tab==='login');
+  document.getElementById('registerForm').classList.toggle('active', tab==='register');
+  document.getElementById('loginMsg').className = 'msg';
+  document.getElementById('registerMsg').className = 'msg';
+}
 
-    function showMsg(text, isError) {
-        const msg = document.getElementById('message');
-        msg.textContent = text;
-        msg.className = 'msg ' + (isError ? 'error' : 'success');
-        setTimeout(() => msg.className = 'msg', 3000);
-    }
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text; el.className = `msg ${type}`;
+}
 
-    async function register() {
-        const name = document.getElementById('regName').value.trim();
-        const surname = document.getElementById('regSurname').value.trim();
-        const password = document.getElementById('regPassword').value;
-        if (!name || !surname || !password) return showMsg('Hamma maydonni to\'ldiring', true);
-        const res = await fetch('/api/register', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ name, surname, password })
-        });
-        const data = await res.json();
-        if (data.success) {
-            showMsg("✅ Ro'yxatdan o'tdingiz! Endi kiring.", false);
-            document.querySelector('.tab[data-tab="login"]').click();
-        } else showMsg(data.error, true);
-    }
+function setLoading(btn, state) {
+  btn.classList.toggle('loading', state);
+}
 
-    async function login() {
-        const name = document.getElementById('loginName').value.trim();
-        const surname = document.getElementById('loginSurname').value.trim();
-        const password = document.getElementById('loginPassword').value;
-        const res = await fetch('/api/login', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ name, surname, password })
-        });
-        const data = await res.json();
-        if (data.success) {
-            localStorage.setItem('userId', data.user.id);
-            localStorage.setItem('userName', `${data.user.name} ${data.user.surname}`);
-            window.location.href = '/dashboard.html';
-        } else showMsg(data.error, true);
-    }
+async function login() {
+  const btn = event.currentTarget;
+  const name = document.getElementById('loginName').value.trim();
+  const surname = document.getElementById('loginSurname').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if (!name || !surname || !password) return showMsg('loginMsg', 'Barcha maydonlarni to\'ldiring', 'error');
+  setLoading(btn, true);
+  try {
+    const res = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name,surname,password}) });
+    const data = await res.json();
+    if (!res.ok) { showMsg('loginMsg', data.error, 'error'); return; }
+    localStorage.setItem('userId', data.user.id);
+    localStorage.setItem('userName', `${data.user.name} ${data.user.surname}`);
+    localStorage.setItem('userIcon', data.user.icon);
+    localStorage.setItem('userDirection', data.user.direction || '');
+    localStorage.setItem('userScores', JSON.stringify(data.user.scores || {}));
+    showMsg('loginMsg', 'Muvaffaqiyatli kirildi! Yo\'naltirilmoqda...', 'success');
+    setTimeout(() => window.location.href = '/dashboard', 800);
+  } catch { showMsg('loginMsg', 'Server bilan aloqa yo\'q', 'error'); }
+  finally { setLoading(btn, false); }
+}
+
+async function register() {
+  const btn = event.currentTarget;
+  const name = document.getElementById('regName').value.trim();
+  const surname = document.getElementById('regSurname').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const password2 = document.getElementById('regPassword2').value;
+  if (!name || !surname || !password) return showMsg('registerMsg', 'Barcha maydonlarni to\'ldiring', 'error');
+  if (password.length < 6) return showMsg('registerMsg', 'Parol kamida 6 ta belgi bo\'lishi kerak', 'error');
+  if (password !== password2) return showMsg('registerMsg', 'Parollar mos emas', 'error');
+  setLoading(btn, true);
+  try {
+    const res = await fetch('/api/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name,surname,password}) });
+    const data = await res.json();
+    if (!res.ok) { showMsg('registerMsg', data.error, 'error'); return; }
+    localStorage.setItem('userId', data.user.id);
+    localStorage.setItem('userName', `${data.user.name} ${data.user.surname}`);
+    localStorage.setItem('userIcon', data.user.icon || '😊');
+    localStorage.setItem('userDirection', '');
+    localStorage.setItem('isNewUser', 'true');
+    showMsg('registerMsg', 'Hisob yaratildi! Yo\'naltirilmoqda...', 'success');
+    setTimeout(() => window.location.href = '/dashboard', 800);
+  } catch { showMsg('registerMsg', 'Server bilan aloqa yo\'q', 'error'); }
+  finally { setLoading(btn, false); }
+}
+
+// Enter key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const active = document.querySelector('.form-section.active');
+    if (active) active.querySelector('.submit-btn').click();
+  }
+});
+
+// Already logged in?
+if (localStorage.getItem('userId')) window.location.href = '/dashboard';
 </script>
 </body>
 </html>
