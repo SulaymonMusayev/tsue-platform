@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TSUE Platform</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #1E2A5E;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 350px;
+        }
+        h1 { color: #1E2A5E; text-align: center; }
+        h1 span { color: #E58A2E; }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #E58A2E;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .tab {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab button {
+            background: #ddd;
+            color: black;
+        }
+        .tab .active {
+            background: #1E2A5E;
+            color: white;
+        }
+        .form {
+            display: none;
+        }
+        .form.show {
+            display: block;
+        }
+        .msg {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+        .msg.error { background: #ffe0e0; color: red; display: block; }
+        .msg.ok { background: #e0ffe0; color: green; display: block; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1>TSUE <span>PLATFORM</span></h1>
+    <div class="tab">
+        <button id="tabReg" class="active">Ro'yxatdan o'tish</button>
+        <button id="tabLog">Kirish</button>
+    </div>
+
+    <div id="regForm" class="form show">
+        <input type="text" id="regName" placeholder="Ism">
+        <input type="text" id="regSurname" placeholder="Familiya">
+        <input type="password" id="regPass" placeholder="Parol">
+        <button onclick="register()">Ro'yxatdan o'tish</button>
+    </div>
+
+    <div id="logForm" class="form">
+        <input type="text" id="logName" placeholder="Ism">
+        <input type="text" id="logSurname" placeholder="Familiya">
+        <input type="password" id="logPass" placeholder="Parol">
+        <button onclick="login()">Kirish</button>
+    </div>
+
+    <div id="msg" class="msg"></div>
+</div>
+
+<script>
+    document.getElementById('tabReg').onclick = () => {
+        document.getElementById('regForm').classList.add('show');
+        document.getElementById('logForm').classList.remove('show');
+        document.getElementById('tabReg').classList.add('active');
+        document.getElementById('tabLog').classList.remove('active');
+    };
+    document.getElementById('tabLog').onclick = () => {
+        document.getElementById('logForm').classList.add('show');
+        document.getElementById('regForm').classList.remove('show');
+        document.getElementById('tabLog').classList.add('active');
+        document.getElementById('tabReg').classList.remove('active');
+    };
+
+    function showMsg(text, isError) {
+        const m = document.getElementById('msg');
+        m.textContent = text;
+        m.className = 'msg ' + (isError ? 'error' : 'ok');
+        setTimeout(() => m.className = 'msg', 3000);
+    }
+
+    async function register() {
+        const name = document.getElementById('regName').value;
+        const surname = document.getElementById('regSurname').value;
+        const password = document.getElementById('regPass').value;
+        if (!name || !surname || !password) {
+            showMsg('Hamma maydonni toldiring', true);
+            return;
+        }
+        const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ name, surname, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+            showMsg("Ro'yxatdan o'tdingiz! Endi kiring", false);
+            document.getElementById('tabLog').click();
+        } else {
+            showMsg(data.error, true);
+        }
+    }
+
+    async function login() {
+        const name = document.getElementById('logName').value;
+        const surname = document.getElementById('logSurname').value;
+        const password = document.getElementById('logPass').value;
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ name, surname, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+            localStorage.setItem('userId', data.user.id);
+            window.location.href = '/dashboard.html';
+        } else {
+            showMsg(data.error, true);
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background: #1E2A5E;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .welcome {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .icon {
+            font-size: 40px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background: white;
+            width: 350px;
+            margin: 100px auto;
+            padding: 20px;
+            border-radius: 16px;
+        }
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <div><b>TSUE PLATFORM</b></div>
+    <button onclick="logout()" style="background:#E58A2E; border:none; padding:5px 15px; border-radius:8px; cursor:pointer;">Chiqish</button>
+</div>
+<div class="container">
+    <div class="welcome">
+        <h2 id="welcomeMsg">Xush kelibsiz!</h2>
+    </div>
+    <div class="grid">
+        <div class="card" onclick="selectDir()">
+            <div class="icon">🎯</div>
+            <h3>Yo'nalish tanlash</h3>
+            <p>3 ta yo'nalishdan birini tanlang</p>
+        </div>
+        <div class="card" onclick="showInfo()">
+            <div class="icon">📚</div>
+            <h3>Yo'nalish haqida</h3>
+            <p>Batafsil ma'lumot</p>
+        </div>
+        <div class="card" onclick="showRank()">
+            <div class="icon">🏆</div>
+            <h3>Reyting</h3>
+            <p>Eng yaxshi talabalar</p>
+        </div>
+        <div class="card" onclick="openGroup()">
+            <div class="icon">📱</div>
+            <h3>Telegram guruh</h3>
+            <p>Qo'shilish</p>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+    const userId = localStorage.getItem('userId');
+    if (!userId) window.location.href = '/';
+    document.getElementById('welcomeMsg').innerHTML = `Xush kelibsiz, foydalanuvchi!`;
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = '/';
+    }
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+    function selectDir() {
+        document.getElementById('modalBody').innerHTML = `
+            <h3>Yo'nalish tanlang</h3>
+            <div onclick="saveDir('suniy intellekt')">🤖 Suniy intellekt</div>
+            <div onclick="saveDir('axborot xavfsizligi')">🔒 Axborot xavfsizligi</div>
+            <div onclick="saveDir('statistika')">📊 Statistika</div>
+        `;
+        document.getElementById('modal').style.display = 'block';
+    }
+    function saveDir(d) {
+        localStorage.setItem('dir', d);
+        alert(d + " tanlandi");
+        closeModal();
+    }
+    function showInfo() {
+        const d = localStorage.getItem('dir');
+        if (!d) { alert('Avval yo\'nalish tanlang'); return; }
+        const info = {
+            'suniy intellekt': 'Suniy intellekt – kompyuterlarni fikrlashga o\'rgatish. Python, ML.',
+            'axborot xavfsizligi': 'Axborot xavfsizligi – ma\'lumotlarni himoya qilish.',
+            'statistika': 'Statistika – ma\'lumotlarni tahlil qilish.'
+        };
+        document.getElementById('modalBody').innerHTML = `<h3>${d}</h3><p>${info[d]}</p>`;
+        document.getElementById('modal').style.display = 'block';
+    }
+    function showRank() {
+        document.getElementById('modalBody').innerHTML = `<h3>🏆 Reyting</h3><p>Hozircha ma'lumot yo'q</p>`;
+        document.getElementById('modal').style.display = 'block';
+    }
+    function openGroup() {
+        window.open('https://t.me/+1WNbg57C2FQwZjAy', '_blank');
+    }
+</script>
+</body>
+</html>
