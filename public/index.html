@@ -1,124 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <title>TSUE Platform</title>
+    <title>TSUE Platform | Kirish</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: Arial;
-            background: #1E2A5E;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0f2a 0%, #1a1f3a 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
-        .box {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            width: 350px;
-        }
-        h1 { color: #1E2A5E; text-align: center; }
-        h1 span { color: #E58A2E; }
-        input {
+        .container {
+            background: rgba(255,255,255,0.98);
+            border-radius: 32px;
+            padding: 40px;
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            max-width: 460px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
         }
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #E58A2E;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 32px;
+            background: linear-gradient(135deg, #1E2A5E, #D4AF37);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
         }
         .tab {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: #f0f2f5;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
         }
-        .tab button {
-            background: #ddd;
-            color: black;
-        }
-        .tab .active {
+        .tab.active {
             background: #1E2A5E;
             color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
         .form {
             display: none;
         }
-        .form.show {
+        .form.active {
             display: block;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 28px;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #1E2A5E, #2a3a7a);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            transform: scale(1.02);
+            background: linear-gradient(135deg, #15204a, #1E2A5E);
         }
         .msg {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 8px;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 28px;
+            text-align: center;
             display: none;
         }
-        .msg.error { background: #ffe0e0; color: red; display: block; }
-        .msg.ok { background: #e0ffe0; color: green; display: block; }
+        .msg.error {
+            background: #fee2e2;
+            color: #b91c1c;
+            display: block;
+        }
+        .msg.success {
+            background: #e0f2fe;
+            color: #0f3b5c;
+            display: block;
+        }
+        footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.8rem;
+            color: #888;
+        }
     </style>
 </head>
 <body>
-<div class="box">
-    <h1>TSUE <span>PLATFORM</span></h1>
-    <div class="tab">
-        <button id="tabReg" class="active">Ro'yxatdan o'tish</button>
-        <button id="tabLog">Kirish</button>
+<div class="container">
+    <h1>📘 TSUE <span style="color:#D4AF37;">CAREER</span></h1>
+    <div class="tabs">
+        <button class="tab active" data-tab="register">📝 Ro'yxatdan o'tish</button>
+        <button class="tab" data-tab="login">🔐 Profilga kirish</button>
     </div>
 
-    <div id="regForm" class="form show">
+    <div id="register" class="form active">
         <input type="text" id="regName" placeholder="Ism">
         <input type="text" id="regSurname" placeholder="Familiya">
-        <input type="password" id="regPass" placeholder="Parol">
-        <button onclick="register()">Ro'yxatdan o'tish</button>
+        <input type="password" id="regPassword" placeholder="Parol">
+        <button onclick="register()">📌 Ro'yxatdan o'tish</button>
     </div>
 
-    <div id="logForm" class="form">
-        <input type="text" id="logName" placeholder="Ism">
-        <input type="text" id="logSurname" placeholder="Familiya">
-        <input type="password" id="logPass" placeholder="Parol">
-        <button onclick="login()">Kirish</button>
+    <div id="login" class="form">
+        <input type="text" id="loginName" placeholder="Ism">
+        <input type="text" id="loginSurname" placeholder="Familiya">
+        <input type="password" id="loginPassword" placeholder="Parol">
+        <button onclick="login()">🚀 Kirish</button>
     </div>
 
-    <div id="msg" class="msg"></div>
+    <div id="message" class="msg"></div>
+    <footer>© TSUE Programming Career — bilim sari bir qadam</footer>
 </div>
 
 <script>
-    document.getElementById('tabReg').onclick = () => {
-        document.getElementById('regForm').classList.add('show');
-        document.getElementById('logForm').classList.remove('show');
-        document.getElementById('tabReg').classList.add('active');
-        document.getElementById('tabLog').classList.remove('active');
-    };
-    document.getElementById('tabLog').onclick = () => {
-        document.getElementById('logForm').classList.add('show');
-        document.getElementById('regForm').classList.remove('show');
-        document.getElementById('tabLog').classList.add('active');
-        document.getElementById('tabReg').classList.remove('active');
-    };
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form').forEach(f => f.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab).classList.add('active');
+        });
+    });
 
     function showMsg(text, isError) {
-        const m = document.getElementById('msg');
-        m.textContent = text;
-        m.className = 'msg ' + (isError ? 'error' : 'ok');
-        setTimeout(() => m.className = 'msg', 3000);
+        const msg = document.getElementById('message');
+        msg.textContent = text;
+        msg.className = 'msg ' + (isError ? 'error' : 'success');
+        setTimeout(() => msg.className = 'msg', 3000);
     }
 
     async function register() {
-        const name = document.getElementById('regName').value;
-        const surname = document.getElementById('regSurname').value;
-        const password = document.getElementById('regPass').value;
-        if (!name || !surname || !password) {
-            showMsg('Hamma maydonni toldiring', true);
-            return;
-        }
+        const name = document.getElementById('regName').value.trim();
+        const surname = document.getElementById('regSurname').value.trim();
+        const password = document.getElementById('regPassword').value;
+        if (!name || !surname || !password) return showMsg('Hamma maydonni to\'ldiring', true);
         const res = await fetch('/api/register', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -126,17 +171,15 @@
         });
         const data = await res.json();
         if (data.success) {
-            showMsg("Ro'yxatdan o'tdingiz! Endi kiring", false);
-            document.getElementById('tabLog').click();
-        } else {
-            showMsg(data.error, true);
-        }
+            showMsg("✅ Ro'yxatdan o'tdingiz! Endi kiring.", false);
+            document.querySelector('.tab[data-tab="login"]').click();
+        } else showMsg(data.error, true);
     }
 
     async function login() {
-        const name = document.getElementById('logName').value;
-        const surname = document.getElementById('logSurname').value;
-        const password = document.getElementById('logPass').value;
+        const name = document.getElementById('loginName').value.trim();
+        const surname = document.getElementById('loginSurname').value.trim();
+        const password = document.getElementById('loginPassword').value;
         const res = await fetch('/api/login', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -145,10 +188,9 @@
         const data = await res.json();
         if (data.success) {
             localStorage.setItem('userId', data.user.id);
+            localStorage.setItem('userName', `${data.user.name} ${data.user.surname}`);
             window.location.href = '/dashboard.html';
-        } else {
-            showMsg(data.error, true);
-        }
+        } else showMsg(data.error, true);
     }
 </script>
 </body>
