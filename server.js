@@ -6,11 +6,70 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// RAM DATABASE (Supabase kerak emas)
+// ========== RAM DATABASE (Supabase o'rniga) ==========
 let users = [];
 let nextId = 1;
 
-// ========== AUTH ==========
+// ========== TASKS DATA (SENING TO'LIQ MA'LUMOTLARING) ==========
+const TASKS = {
+  ai: {
+    learn: [
+      { id: 'ai-l1', level: 'basic', title: 'Python asoslari', theory: 'Python - dasturlash tili', task: 'Hello World', solution_check: 'print', starter_code: 'print("Hello")' },
+      { id: 'ai-l2', level: 'basic', title: 'NumPy', theory: 'NumPy - raqamli hisoblar', task: 'O\'rtacha toping', solution_check: 'mean', starter_code: 'import numpy as np\narr = np.array([1,2,3])\nprint(arr.mean())' }
+    ],
+    weekly: {
+      tests: [
+        { q: 'Machine Learning nima?', options: ['Odamlarni o\'qitish', 'Kompyuterga ma\'lumotlardan o\'rganishni o\'rgatish', 'Dastur yozish', 'Internet tarmog\'i'], answer: 1 },
+        { q: 'Python da list yaratish?', options: ['(1,2,3)', '{1,2,3}', '[1,2,3]', '<1,2,3>'], answer: 2 },
+        { q: 'NumPy da massiv o\'rtachasi?', options: ['np.avg()', 'np.mean()', 'np.average()', 'np.sum()/len()'], answer: 1 }
+      ],
+      logic: [
+        { q: '2 + 2 * 2 = ?', answer: '6' },
+        { q: '10 // 3 = ?', answer: '3' }
+      ],
+      coding: [
+        { q: 'Fibonacci ketma-ketligi', check: 'fib', starter: 'def fib(n):\n    if n<=1: return n\n    return fib(n-1)+fib(n-2)\nprint(fib(10))' }
+      ]
+    }
+  },
+  security: {
+    learn: [
+      { id: 'sec-l1', level: 'basic', title: 'Kriptografiya', theory: 'Ma\'lumotni shifrlash', task: 'Hash hisoblash', solution_check: 'hashlib', starter_code: 'import hashlib\nprint(hashlib.sha256(b"test").hexdigest())' }
+    ],
+    weekly: {
+      tests: [
+        { q: 'SQL Injection nima?', options: ['Ma\'lumot bazasiga hujum', 'Virus', 'Tarmoq hujumi', 'Phishing'], answer: 0 },
+        { q: 'HTTPS da S nima?', options: ['Secure', 'Speed', 'Server', 'System'], answer: 0 }
+      ],
+      logic: [
+        { q: 'HTTP port?', answer: '80' },
+        { q: 'HTTPS port?', answer: '443' }
+      ],
+      coding: [
+        { q: 'SHA256 hash', check: 'hashlib', starter: 'import hashlib\nprint(hashlib.sha256(b"TSUE").hexdigest())' }
+      ]
+    }
+  },
+  statistics: {
+    learn: [
+      { id: 'stat-l1', level: 'basic', title: 'Statistika', theory: 'O\'rtacha, mediana, moda', task: 'O\'rtacha toping', solution_check: 'mean', starter_code: 'import statistics\ndata = [10,20,30]\nprint(statistics.mean(data))' }
+    ],
+    weekly: {
+      tests: [
+        { q: 'O\'rtacha qanday topiladi?', options: ['Sum/n', 'Max-min', 'O\'rtadagi', 'Eng ko\'p'], answer: 0 },
+        { q: 'Mediana nima?', options: ['O\'rtacha', 'O\'rtadagi qiymat', 'Eng katta', 'Eng kichik'], answer: 1 }
+      ],
+      logic: [
+        { q: '[1,2,3,4,5] o\'rtachasi?', answer: '3' }
+      ],
+      coding: [
+        { q: 'statistics.mean()', check: 'mean', starter: 'import statistics\ndata = [5,10,15]\nprint(statistics.mean(data))' }
+      ]
+    }
+  }
+};
+
+// ========== AUTH ROUTES (Supabase o'rniga RAM) ==========
 app.post('/api/register', async (req, res) => {
   try {
     const { name, surname, password } = req.body;
@@ -21,7 +80,7 @@ app.post('/api/register', async (req, res) => {
     const hashed = await bcrypt.hash(password, 10);
     const newUser = { id: nextId++, name, surname, password: hashed, icon: '😊', direction: null, scores: {} };
     users.push(newUser);
-    res.json({ success: true, user: { id: newUser.id, name, surname, icon: '😊', direction: null, scores: {} } });
+    res.json({ success: true, user: { id: newUser.id, name, surname, icon: newUser.icon, direction: newUser.direction, scores: newUser.scores } });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
@@ -60,29 +119,16 @@ app.post('/api/save-score', (req, res) => {
   res.json({ success: true });
 });
 
-// ========== TASKS (avvalgi TASKS ma'lumotlaringizni shu yerga qaytaring) ==========
-const TASKS = {
-  ai: {
-    learn: [
-      { id: 'ai-l1', level: 'basic', title: 'Python asoslari', theory: 'Python dasturlash tili', task: 'Hello World', solution_check: 'print', starter_code: 'print("Hello")' }
-    ],
-    weekly: {
-      tests: [{ q: 'Python ozgaruvchi', options: ['var', 'let', 'hech narsa', 'dim'], answer: 2 }],
-      logic: [{ q: '2+2', answer: '4' }],
-      coding: [{ q: 'print', check: 'print', starter: '# kod' }]
-    }
-  },
-  security: { learn: [], weekly: { tests: [], logic: [], coding: [] } },
-  statistics: { learn: [], weekly: { tests: [], logic: [], coding: [] } }
-};
-
+// ========== TASKS ROUTES ==========
 app.get('/api/tasks/:direction', (req, res) => {
-  res.json(TASKS[req.params.direction] || { learn: [], weekly: { tests: [], logic: [], coding: [] } });
+  const dir = req.params.direction;
+  res.json(TASKS[dir] || { learn: [], weekly: { tests: [], logic: [], coding: [] } });
 });
 
 app.post('/api/submit-code', (req, res) => {
   const { code, check } = req.body;
-  res.json({ success: code && code.includes(check), message: code && code.includes(check) ? '✅ Togri' : '❌ Xato' });
+  const passed = code && code.includes(check);
+  res.json({ success: passed, message: passed ? '✅ Togri' : '❌ Xato' });
 });
 
 app.get('/api/ranking', (req, res) => {
@@ -91,9 +137,15 @@ app.get('/api/ranking', (req, res) => {
   res.json(ranking);
 });
 
-app.get('/health', (_, res) => res.json({ status: 'ok' }));
+// ========== AI CHAT ==========
+app.post('/api/ai-chat', (req, res) => {
+  res.json({ reply: 'AI chat hozircha faqat frontend orqali ishlaydi. Tez orada qoshamiz.' });
+});
+
+// ========== HEALTH ==========
+app.get('/health', (_, res) => res.json({ status: 'ok', users: users.length }));
 app.get('/', (_, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 app.get('/dashboard', (_, res) => res.sendFile(path.join(__dirname, 'public', 'dashboard.html')));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server ${PORT} da ishlayapti`));
+app.listen(PORT, () => console.log(`🚀 Server ${PORT} da ishlayapti, ${users.length} foydalanuvchi`));
